@@ -11,6 +11,7 @@ export default function NavLinks() {
     { href: '/assessment', key: 'nav.assessment' },
     { href: '/planilla',   key: 'nav.planilla'   },
     { href: '/history',    key: 'nav.history'    },
+    { href: '/profile',    key: 'nav.profile'    },
   ]
   return (
     <div className="flex gap-0.5">

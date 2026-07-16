@@ -12,6 +12,7 @@ const translations = {
       assessment: 'Assessment',
       planilla: 'Planilla',
       history: 'Historial',
+      profile: 'Perfil',
       signout: 'Salir',
     },
     eventTypes: {
@@ -66,6 +67,25 @@ const translations = {
       trialBanner: 'Prueba Premium gratis por 7 días',
       trialNoCard: 'Sin tarjeta de crédito.',
       generating: 'Esto puede tomar 1-2 minutos',
+      saving: 'Guardando...',
+      upgradePremium: 'Mejorar a Premium',
+      downloadPdf: 'Descargar PDF',
+    },
+    profile: {
+      title: 'Mi Perfil',
+      subtitle: 'Actualiza tu información personal',
+      plan: 'Plan',
+      email: 'Correo electrónico',
+      name: 'Nombre completo',
+      namePlaceholder: 'Prof. Juan García',
+      school: 'Escuela',
+      schoolPlaceholder: 'Escuela Superior...',
+      subject: 'Materia principal',
+      selectSubject: 'Selecciona una materia',
+      grade: 'Grado que enseñas',
+      selectGrade: 'Selecciona un grado',
+      saveBtn: 'Guardar cambios',
+      saved: 'Cambios guardados correctamente.',
     },
     dashboard: {
       welcome: 'Bienvenido/a',
@@ -219,6 +239,7 @@ const translations = {
       assessment: 'Assessment',
       planilla: 'Spec Sheet',
       history: 'History',
+      profile: 'Profile',
       signout: 'Sign out',
     },
     eventTypes: {
@@ -273,6 +294,25 @@ const translations = {
       trialBanner: 'Free Premium trial — 7 days',
       trialNoCard: 'No credit card required.',
       generating: 'This may take 1-2 minutes',
+      saving: 'Saving...',
+      upgradePremium: 'Upgrade to Premium',
+      downloadPdf: 'Download PDF',
+    },
+    profile: {
+      title: 'My Profile',
+      subtitle: 'Update your personal information',
+      plan: 'Plan',
+      email: 'Email address',
+      name: 'Full name',
+      namePlaceholder: 'Prof. Juan García',
+      school: 'School',
+      schoolPlaceholder: 'High School...',
+      subject: 'Main subject',
+      selectSubject: 'Select a subject',
+      grade: 'Grade you teach',
+      selectGrade: 'Select a grade',
+      saveBtn: 'Save changes',
+      saved: 'Changes saved successfully.',
     },
     dashboard: {
       welcome: 'Welcome',
@@ -403,46 +443,34 @@ const translations = {
       colCriterion: 'Criterion',
       colExcellent: 'Excellent (4)',
       colGood: 'Good (3)',
-      colDeveloping: 'Developing (2)',
+            colDeveloping: 'Developing (2)',
       colBeginning: 'Beginning (1)',
-    },
-    history: {
-      title: 'Lesson Plan History',
-      subtitle: 'All your saved lesson plans',
-      noHistory: 'You have no saved lesson plans yet.',
-      noHistoryHint: 'Generate your first plan from the Planner.',
-      loadMore: 'Load more',
-      viewPlan: 'View plan',
-      deletePlan: 'Delete',
-      printPlan: 'Print',
+      newRubric: 'New rubric',
+      generated: 'Rubric generated',
+      generating: 'Generating rubric...',
+      printPdf: 'Print / PDF',
     },
   },
 } as const
 
-export type Translations = typeof translations.es
+type DeepPartial<T> = { [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K] }
 
-// Recursive key paths for type-safe lookup
-type Leaves<T, Prefix extends string = ''> = T extends object
-  ? { [K in keyof T]: Leaves<T[K], `${Prefix}${Prefix extends '' ? '' : '.'}${K & string}`> }[keyof T]
-  : Prefix
-
-export type TranslationKey = Leaves<Translations>
+function getNestedValue(obj: Record<string, unknown>, path: string): string | undefined {
+  const keys = path.split('.')
+  let current: unknown = obj
+  for (const key of keys) {
+    if (current === null || typeof current !== 'object') return undefined
+    current = (current as Record<string, unknown>)[key]
+  }
+  return typeof current === 'string' ? current : undefined
+}
 
 export function translate(lang: Lang, key: string): string {
-  const keys = key.split('.')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let obj: any = translations[lang]
-  for (const k of keys) {
-    if (obj == null) break
-    obj = obj[k]
+  const result = getNestedValue(translations[lang] as unknown as Record<string, unknown>, key)
+  if (result !== undefined) return result
+  if (lang !== 'es') {
+    const fallback = getNestedValue(translations['es'] as unknown as Record<string, unknown>, key)
+    if (fallback !== undefined) return fallback
   }
-  if (typeof obj === 'string') return obj
-  // Fallback to Spanish
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let fallback: any = translations.es
-  for (const k of keys) {
-    if (fallback == null) break
-    fallback = fallback[k]
-  }
-  return typeof fallback === 'string' ? fallback : key
+  return key
 }

@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { englishCurriculum } from '@/lib/curriculum/english'
 import { spanishCurriculum } from '@/lib/curriculum/spanish'
 import { adquisicionCurriculum } from '@/lib/curriculum/adquisicion'
@@ -144,6 +144,157 @@ export default function PlannerPage() {
 
   function handleReset() { setStep('select'); setPlan(null); setPlanId(null); setGrade(''); setUnitId(''); setWeek(''); setTeacherNotes('') }
 
+  const downloadPDF = useCallback(async () => {
+    if (!plan) return
+    const { default: jsPDF } = await import('jspdf')
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'letter' })
+
+    const days: Array<keyof typeof plan.days> = ['monday','tuesday','wednesday','thursday','friday']
+    const dayLabels = plan.language === 'english'
+      ? ['Monday','Tuesday','Wednesday','Thursday','Friday']
+      : ['Lunes','Martes','Miércoles','Jueves','Viernes']
+    const phaseLabels = plan.language === 'english'
+      ? { initial: 'Opening', developing: 'Development', closing: 'Closing' }
+      : { initial: 'Inicio', developing: 'Desarrollo', closing: 'Cierre' }
+
+    const pageW = 279, pageH = 216
+    const margin = 10
+    const colW = (pageW - margin * 2) / 5
+    const headerH = 28
+
+    // Header background
+    doc.setFillColor(15, 23, 42)
+    doc.rect(0, 0, pageW, headerH, 'F')
+
+    // Title
+    doc.setTextColor(255, 255, 255)
+    doc.setFontSize(13)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Asistente Curricular PR', margin, 8)
+
+    doc.setFontSize(9)
+    doc.setFont('helvetica', 'normal')
+    doc.text(`${plan.subject} · ${plan.grade} · ${plan.unitName} · ${plan.language === 'english' ? 'Week' : 'Semana'} ${plan.weekCode.split('W')[1]}`, margin, 14)
+    doc.text(`${plan.teacher ? plan.teacher + ' · ' : ''}${plan.school || ''}`, margin, 19)
+    if (plan.weekStartDate) doc.text(plan.weekStartDate, margin, 24)
+
+    // Theme
+    doc.setFontSize(8)
+    doc.setTextColor(148, 163, 184)
+    doc.text(`${plan.language === 'english' ? 'Theme:' : 'Tema:'} ${plan.theme}`, pageW - margin, 19, { align: 'right' })
+
+    // Day columns
+    const startY = headerH + 4
+    days.forEach((day, i) => {
+      const x = margin + i * colW
+      const dayPlan = plan.days[day]
+      let y = startY
+
+      // Day header
+      doc.setFillColor(37, 99, 235)
+      doc.rect(x, y, colW - 1, 6, 'F')
+      doc.setTextColor(255, 255, 255)
+      doc.setFontSize(8)
+      doc.setFont('helvetica', 'bold')
+      doc.text(dayLabels[i], x + (colW - 1) / 2, y + 4, { align: 'center' })
+      y += 8
+
+      // Standards
+      doc.setFillColor(30, 41, 59)
+      doc.rect(x, y, colW - 1, 4, 'F')
+      doc.setTextColor(148, 163, 184)
+      doc.setFontSize(6)
+      doc.setFont('helvetica', 'bold')
+      doc.text(plan.language === 'english' ? 'STANDARD' : 'ESTÁNDAR', x + 1, y + 2.8)
+      y += 4
+      doc.setFillColor(248, 250, 252)
+      doc.rect(x, y, colW - 1, 6, 'F')
+      doc.setTextColor(30, 41, 59)
+      doc.setFont('helvetica', 'normal')
+      const stdLines = doc.splitTextToSize(dayPlan.standards || '—', colW - 3)
+      doc.text(stdLines[0] || '—', x + 1, y + 4)
+      y += 7
+
+      // Objective
+      doc.setFillColor(30, 41, 59)
+      doc.rect(x, y, colW - 1, 4, 'F')
+      doc.setTextColor(148, 163, 184)
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(6)
+      doc.text(plan.language === 'english' ? 'OBJECTIVE' : 'OBJETIVO', x + 1, y + 2.8)
+      y += 4
+      doc.setFillColor(255, 255, 255)
+      doc.rect(x, y, colW - 1, 10, 'F')
+      doc.setTextColor(30, 41, 59)
+      doc.setFont('helvetica', 'normal')
+      const objLines = doc.splitTextToSize(dayPlan.objectives?.[0] || '—', colW - 3)
+      doc.text(objLines.slice(0, 3), x + 1, y + 3.5)
+      y += 11
+
+      // Phases
+      const phases: Array<'initial' | 'developing' | 'closing'> = ['initial', 'developing', 'closing']
+      const phaseColors: Record<string, [number,number,number]> = {
+        initial:    [239, 246, 255],
+        developing: [240, 253, 244],
+        closing:    [254, 252, 232],
+      }
+      phases.forEach(phase => {
+        doc.setFillColor(30, 41, 59)
+        doc.rect(x, y, colW - 1, 4, 'F')
+        doc.setTextColor(148, 163, 184)
+        doc.setFont('helvetica', 'bold')
+        doc.setFontSize(6)
+        doc.text(phaseLabels[phase].toUpperCase(), x + 1, y + 2.8)
+        y += 4
+        const [r,g,b] = phaseColors[phase]
+        doc.setFillColor(r, g, b)
+        doc.rect(x, y, colW - 1, 18, 'F')
+        doc.setTextColor(30, 41, 59)
+        doc.setFont('helvetica', 'normal')
+        doc.setFontSize(6.5)
+        const acts = dayPlan[phase] || []
+        let actY = y + 3
+        acts.slice(0, 3).forEach(act => {
+          const lines = doc.splitTextToSize(`• ${act}`, colW - 4)
+          lines.slice(0, 2).forEach((line: string) => {
+            if (actY < y + 17) { doc.text(line, x + 1.5, actY); actY += 3 }
+          })
+        })
+        y += 19
+      })
+
+      // Materials
+      if (dayPlan.materials?.length) {
+        doc.setFillColor(30, 41, 59)
+        doc.rect(x, y, colW - 1, 4, 'F')
+        doc.setTextColor(148, 163, 184)
+        doc.setFont('helvetica', 'bold')
+        doc.setFontSize(6)
+        doc.text(plan.language === 'english' ? 'MATERIALS' : 'MATERIALES', x + 1, y + 2.8)
+        y += 4
+        doc.setFillColor(250, 250, 250)
+        doc.rect(x, y, colW - 1, 8, 'F')
+        doc.setTextColor(30, 41, 59)
+        doc.setFont('helvetica', 'normal')
+        doc.setFontSize(6)
+        const matText = dayPlan.materials.slice(0, 4).join(', ')
+        const matLines = doc.splitTextToSize(matText, colW - 3)
+        doc.text(matLines.slice(0, 2), x + 1, y + 3)
+      }
+    })
+
+    // Footer
+    doc.setFillColor(15, 23, 42)
+    doc.rect(0, pageH - 6, pageW, 6, 'F')
+    doc.setTextColor(100, 116, 139)
+    doc.setFontSize(6)
+    doc.setFont('helvetica', 'normal')
+    doc.text('curricular-ai.vercel.app', pageW / 2, pageH - 2, { align: 'center' })
+
+    const filename = `plan-${plan.weekCode}-${plan.grade}.pdf`.replace(/\s/g, '-').toLowerCase()
+    doc.save(filename)
+  }, [plan])
+
   if (step === 'generating') return <GeneratingScreen messages={TEACHER_MSGS} />
 
   if (step === 'result' && plan) {
@@ -157,8 +308,9 @@ export default function PlannerPage() {
             <p className="text-slate-400 text-sm mt-1">{gradeData?.label} · {getSubjectLabel(subject)} · {unitData?.name} · {t('planner.week')} {week}</p>
           </div>
           <div className="flex gap-3">
-            <button onClick={() => window.print()} className="px-4 py-2 bg-green-700 hover:bg-green-600 rounded-lg text-sm font-medium transition-colors">
-              Imprimir / PDF
+            <button onClick={downloadPDF} className="px-4 py-2 bg-green-700 hover:bg-green-600 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"/></svg>
+              {t('common.downloadPdf')}
             </button>
             <button onClick={handleReset} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm font-medium transition-colors">
               {t('planner.newPlan')}
@@ -181,10 +333,12 @@ export default function PlannerPage() {
         <div ref={printRef} className="bg-white rounded-xl overflow-hidden">
           <WeeklyPlanTable plan={plan} />
         </div>
+   
       </div>
     )
   }
 
+  // ── Selection form ───────────────────────────────────────────────────────────
   return (
     <div className="space-y-8">
       <div>
@@ -193,66 +347,84 @@ export default function PlannerPage() {
       </div>
 
       <form onSubmit={handleGenerate} className="space-y-6">
+        {/* Teacher info */}
         <div className="bg-slate-900 border border-slate-800 rounded-lg p-4 space-y-4">
           <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">{t('planner.teacherInfo')}</p>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1">{t('planner.teacherName')}</label>
-              <input type="text" value={teacherName} onChange={e => setTeacherName(e.target.value)} placeholder="Prof. Juan Garcia" className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 text-sm" />
+              <input type="text" value={teacherName} onChange={e => setTeacherName(e.target.value)}
+                placeholder={t('planner.teacherNamePlaceholder')}
+                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500" />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1">{t('planner.school')}</label>
-              <input type="text" value={school} onChange={e => setSchool(e.target.value)} placeholder={t('planner.schoolPlaceholder')} className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 text-sm" />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">{t('planner.weekStart')}</label>
-              <input type="date" value={weekStartDate} onChange={e => setWeekStartDate(e.target.value)} className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500 text-sm" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">{t('planner.grade')}</label>
-              <select value={grade} onChange={e => handleGradeChange(e.target.value)} className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500 text-sm">
-                <option value="">{t('planner.selectGrade')}...</option>
-                {ALL_GRADES.map(g => <option key={g.value} value={g.value}>{g.label}</option>)}
-              </select>
+              <input type="text" value={school} onChange={e => setSchool(e.target.value)}
+                placeholder={t('planner.schoolPlaceholder')}
+                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500" />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">{t('planner.subject')}</label>
-            <select value={subject} onChange={e => handleSubjectChange(e.target.value)} className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500 text-sm">
-              {SUBJECTS.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
-            </select>
+            <label className="block text-sm font-medium text-slate-300 mb-1">{t('planner.weekStart')}</label>
+            <input type="date" value={weekStartDate} onChange={e => setWeekStartDate(e.target.value)}
+              className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500" />
           </div>
         </div>
 
-        {grade && !gradeData && (
-          <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 text-slate-400 text-sm">
-            {t('planner.unitNotAvailable')}
+        {/* Subject */}
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-2">{t('planner.subject')}</label>
+          <div className="flex flex-wrap gap-2">
+            {SUBJECTS.map(s => (
+              <button key={s.id} type="button" onClick={() => handleSubjectChange(s.id)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${subject === s.id ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-300 hover:border-slate-500'}`}>
+                {s.label}
+              </button>
+            ))}
           </div>
-        )}
+        </div>
 
-        {gradeData && (
+        {/* Grade */}
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-2">{t('planner.grade')}</label>
+          <div className="flex flex-wrap gap-2">
+            {ALL_GRADES.map(g => (
+              <button key={g.value} type="button" onClick={() => handleGradeChange(g.value)}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border ${grade === g.value ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-300 hover:border-slate-500'}`}>
+                {g.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Unit */}
+        {grade && (
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">{t('planner.unit')}</label>
-            <div className="grid grid-cols-2 gap-3">
-              {gradeData.units.map(u => (
-                <button key={u.id} type="button" onClick={() => { setUnitId(u.id); setWeek('') }}
-                  className={`py-3 px-4 rounded-lg border text-sm text-left transition-colors ${unitId === u.id ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-300 hover:border-blue-500'}`}>
-                  {u.name}
-                </button>
-              ))}
-            </div>
+            {gradeData ? (
+              <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                {gradeData.units.map(u => (
+                  <button key={u.id} type="button" onClick={() => { setUnitId(u.id); setWeek('') }}
+                    className={`w-full text-left px-4 py-3 rounded-xl border transition-colors ${unitId === u.id ? 'bg-blue-600/20 border-blue-500 text-white' : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-600'}`}>
+                    <p className="font-medium text-sm">{u.name}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{u.standards.slice(0,2).join(' · ')}</p>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p className="text-slate-500 text-sm">{t('planner.unitNotAvailable')}</p>
+            )}
           </div>
         )}
 
+        {/* Week */}
         {unitData && (
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">{t('planner.week')}</label>
             <div className="flex flex-wrap gap-2">
-              {unitData.weeks.map(w => (
+              {Array.from({ length: unitData.weeks }, (_, i) => i + 1).map(w => (
                 <button key={w} type="button" onClick={() => setWeek(w)}
-                  className={`w-12 h-12 rounded-lg border text-sm font-medium transition-colors ${week === w ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-300 hover:border-blue-500'}`}>
+                  className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors border ${week === w ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-300 hover:border-slate-500'}`}>
                   {w}
                 </button>
               ))}
@@ -260,31 +432,22 @@ export default function PlannerPage() {
           </div>
         )}
 
-        {unitData && (
-          <div className="bg-slate-900 border border-slate-800 rounded-lg p-4">
-            <p className="text-xs text-slate-500 mb-2 font-medium uppercase tracking-wide">Estandares de esta unidad</p>
-            <div className="flex flex-wrap gap-2">
-              {unitData.standards.map(s => <span key={s} className="px-2 py-1 bg-slate-800 rounded text-xs text-blue-300 font-mono">{s}</span>)}
-            </div>
-          </div>
-        )}
-
-        {week !== '' && (
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">{t('planner.notes')} <span className="text-slate-500 font-normal">{t('planner.optional')}</span></label>
-            <textarea value={teacherNotes} onChange={e => setTeacherNotes(e.target.value)} rows={3}
-              placeholder="Ej: grupo avanzado, enfoque en escritura, proyecto especial esta semana..."
-              className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 resize-none" />
-          </div>
-        )}
+        {/* Notes */}
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-1">
+            {t('planner.notes')} <span className="text-slate-600 text-xs">({t('planner.optional')})</span>
+          </label>
+          <textarea value={teacherNotes} onChange={e => setTeacherNotes(e.target.value)}
+            placeholder={t('planner.notesPlaceholder')} rows={3}
+            className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 resize-none" />
+        </div>
 
         {error && <p className="text-red-400 text-sm">{error}</p>}
 
-        <button type="submit" disabled={!grade || !unitId || week === ''}
+        <button type="submit" disabled={!gradeData || !unitData || week === ''}
           className="w-full py-4 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-semibold text-lg transition-colors">
           {t('planner.generateBtn')}
         </button>
- 
       </form>
     </div>
   )
