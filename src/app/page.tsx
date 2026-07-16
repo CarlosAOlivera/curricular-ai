@@ -27,7 +27,7 @@ export default function HomePage() {
           </Link>
         </div>
         <p className="text-sm text-slate-500 pt-4">
-          Materias Basicas disponible ahora · Más materias próximamente
+          Materias Básicas disponibles ahora · Más materias próximamente
         </p>
       </div>
     </main>

@@ -422,7 +422,7 @@ export default function PlannerPage() {
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">{t('planner.week')}</label>
             <div className="flex flex-wrap gap-2">
-              {Array.from({ length: unitData.weeks }, (_, i) => i + 1).map(w => (
+              {unitData.weeks.map(w => (
                 <button key={w} type="button" onClick={() => setWeek(w)}
                   className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors border ${week === w ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-300 hover:border-slate-500'}`}>
                   {w}
