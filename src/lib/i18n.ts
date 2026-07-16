@@ -445,10 +445,6 @@ const translations = {
       colGood: 'Good (3)',
             colDeveloping: 'Developing (2)',
       colBeginning: 'Beginning (1)',
-      newRubric: 'New rubric',
-      generated: 'Rubric generated',
-      generating: 'Generating rubric...',
-      printPdf: 'Print / PDF',
     },
   },
 } as const
