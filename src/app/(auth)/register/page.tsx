@@ -44,19 +44,19 @@ export default function RegisterPage() {
             <label className="block text-sm text-slate-300 mb-1">Nombre completo</label>
             <input type="text" required value={fullName} onChange={e => setFullName(e.target.value)}
               className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-              placeholder="Prof. Ana García" />
+              placeholder="Nombre y Apellidos" />
           </div>
           <div>
             <label className="block text-sm text-slate-300 mb-1">Correo electrónico</label>
             <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
               className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-              placeholder="maestro@escuela.pr" />
+              placeholder="correo electronico" />
           </div>
           <div>
             <label className="block text-sm text-slate-300 mb-1">Escuela</label>
             <input type="text" value={school} onChange={e => setSchool(e.target.value)}
               className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-              placeholder="Escuela Superior ..." />
+              placeholder="Escuela ..." />
           </div>
           <div>
             <label className="block text-sm text-slate-300 mb-1">Contraseña</label>
