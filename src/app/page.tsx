@@ -10,7 +10,7 @@ export default function HomePage() {
         </h1>
         <p className="text-xl text-slate-400">
           Genera planificaciones alineadas al currículo del DEPR en segundos.
-          Para maestros de Puerto Rico.
+          Para maestros de escuelas publicas de Puerto Rico.
         </p>
         <div className="flex gap-4 justify-center pt-4">
           <Link
@@ -27,7 +27,7 @@ export default function HomePage() {
           </Link>
         </div>
         <p className="text-sm text-slate-500 pt-4">
-          Inglés 9–12 disponible ahora · Más materias próximamente
+          Materias Basicas disponible ahora · Más materias próximamente
         </p>
       </div>
     </main>
