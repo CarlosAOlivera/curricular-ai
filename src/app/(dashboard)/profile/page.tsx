@@ -26,9 +26,48 @@ interface Profile {
   email: string
 }
 
+function parseList(val: string): string[] {
+  if (!val) return []
+  try { return JSON.parse(val) } catch { return val.split(',').map(s => s.trim()).filter(Boolean) }
+}
+
+function serializeList(arr: string[]): string {
+  return JSON.stringify(arr)
+}
+
+function CheckGroup({ options, selected, onChange }: { options: string[]; selected: string[]; onChange: (v: string[]) => void }) {
+  const safe = Array.isArray(selected) ? selected : []
+  function toggle(opt: string) {
+    onChange(safe.includes(opt) ? safe.filter(s => s !== opt) : [...safe, opt])
+  }
+  return (
+    <div className="flex flex-wrap gap-2">
+      {options.map(opt => {
+        const active = safe.includes(opt)
+        return (
+          <button
+            key={opt}
+            type="button"
+            onClick={() => toggle(opt)}
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
+              active
+                ? 'bg-blue-600 border-blue-500 text-white'
+                : 'bg-slate-900 border-slate-700 text-slate-300 hover:border-slate-500'
+            }`}
+          >
+            {opt}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function ProfilePage() {
   const { t } = useLanguage()
   const [profile, setProfile] = useState<Profile>({ full_name: '', school: '', subject_preference: '', grade_preference: '', role: 'free', email: '' })
+  const [subjects, setSubjects] = useState<string[]>([])
+  const [grades, setGrades] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -40,7 +79,11 @@ export default function ProfilePage() {
       if (!user) return
       supabase.from('profiles').select('full_name, school, subject_preference, grade_preference, role, email').eq('id', user.id).single()
         .then(({ data }) => {
-          if (data) setProfile({ ...data, full_name: data.full_name || '', school: data.school || '', subject_preference: data.subject_preference || '', grade_preference: data.grade_preference || '' })
+          if (data) {
+            setProfile({ ...data, full_name: data.full_name || '', school: data.school || '', subject_preference: data.subject_preference || '', grade_preference: data.grade_preference || '' })
+            setSubjects(parseList(data.subject_preference || ''))
+            setGrades(parseList(data.grade_preference || ''))
+          }
           setLoading(false)
         })
     })
@@ -55,8 +98,8 @@ export default function ProfilePage() {
     const { error } = await supabase.from('profiles').update({
       full_name: profile.full_name,
       school: profile.school,
-      subject_preference: profile.subject_preference,
-      grade_preference: profile.grade_preference,
+      subject_preference: serializeList(subjects),
+      grade_preference: serializeList(grades),
     }).eq('id', user.id)
     if (error) setError(error.message)
     else setSaved(true)
@@ -96,7 +139,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Edit form */}
-      <form onSubmit={handleSave} className="space-y-5">
+      <form onSubmit={handleSave} className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-slate-300 mb-1.5">{t('profile.name')}</label>
           <input
@@ -119,29 +162,16 @@ export default function ProfilePage() {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">{t('profile.subject')}</label>
-            <select
-              value={profile.subject_preference}
-              onChange={e => setProfile(p => ({ ...p, subject_preference: e.target.value }))}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
-            >
-              <option value="">{t('profile.selectSubject')}</option>
-              {SUBJECTS.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">{t('profile.grade')}</label>
-            <select
-              value={profile.grade_preference}
-              onChange={e => setProfile(p => ({ ...p, grade_preference: e.target.value }))}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
-            >
-              <option value="">{t('profile.selectGrade')}</option>
-              {GRADES.map(g => <option key={g} value={g}>{t('common.grade')} {g}</option>)}
-            </select>
-          </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-2">{t('profile.subject')}</label>
+          <CheckGroup options={SUBJECTS} selected={subjects} onChange={setSubjects} />
+          {subjects.length === 0 && <p className="text-slate-500 text-xs mt-1">{t('profile.selectSubject')}</p>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-2">{t('profile.grade')}</label>
+          <CheckGroup options={GRADES} selected={Array.isArray(grades) ? grades : []} onChange={setGrades} />
+          {grades.length === 0 && <p className="text-slate-500 text-xs mt-1">{t('profile.selectGrade')}</p>}
         </div>
 
         {error && <p className="text-red-400 text-sm">{error}</p>}
