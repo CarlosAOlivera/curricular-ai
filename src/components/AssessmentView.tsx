@@ -2,7 +2,7 @@
 
 interface Question {
   number: number
-  type: 'multiple_choice' | 'true_false' | 'short_answer'
+  type: string
   question: string
   options?: string[]
   answer: string
