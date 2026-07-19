@@ -437,8 +437,9 @@ export default function PlannerPage() {
           <label className="block text-sm font-medium text-slate-300 mb-1">
             {t('planner.notes')} <span className="text-slate-600 text-xs">({t('planner.optional')})</span>
           </label>
+          <p className="text-xs text-slate-500 mb-2">{t('planner.notesHint')}</p>
           <textarea value={teacherNotes} onChange={e => setTeacherNotes(e.target.value)}
-            placeholder={t('planner.notesPlaceholder')} rows={3}
+            placeholder={t('planner.notesPlaceholder')} rows={4}
             className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 resize-none" />
         </div>
 
@@ -446,6 +447,7 @@ export default function PlannerPage() {
 
         <button type="submit" disabled={!gradeData || !unitData || week === ''}
           className="w-full py-4 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-semibold text-lg transition-colors">
+    
           {t('planner.generateBtn')}
         </button>
       </form>

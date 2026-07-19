@@ -121,7 +121,6 @@ export default function ProfilePage() {
         <p className="text-slate-400 mt-1">{t('profile.subtitle')}</p>
       </div>
 
-      {/* Role badge */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
         <div>
           <p className="text-xs text-slate-500 uppercase tracking-wide">{t('profile.plan')}</p>
@@ -138,7 +137,6 @@ export default function ProfilePage() {
         )}
       </div>
 
-      {/* Edit form */}
       <form onSubmit={handleSave} className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-slate-300 mb-1.5">{t('profile.name')}</label>
