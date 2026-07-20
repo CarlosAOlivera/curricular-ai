@@ -103,16 +103,20 @@ export default function PlannerPage() {
   const [plan, setPlan]         = useState<WeeklyPlanData | null>(null)
   const [planId, setPlanId]     = useState<string | null>(null)
   const [error, setError]       = useState('')
+  const [userRole, setUserRole] = useState<string>('free')
+  const [exportingDocx, setExportingDocx] = useState(false)
+  const [exportingPptx, setExportingPptx] = useState(false)
   const printRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const supabase = createClient()
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) return
-      supabase.from('profiles').select('full_name, school').eq('id', user.id).single()
+      supabase.from('profiles').select('full_name, school, role').eq('id', user.id).single()
         .then(({ data }) => {
           if (data?.full_name) setTeacherName(data.full_name)
           if (data?.school) setSchool(data.school)
+          if (data?.role) setUserRole(data.role)
         })
     })
   }, [])
@@ -295,6 +299,154 @@ export default function PlannerPage() {
     doc.save(filename)
   }, [plan])
 
+  const downloadDocx = useCallback(async () => {
+    if (!plan) return
+    setExportingDocx(true)
+    try {
+      const res = await fetch('/api/office/docx', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(plan),
+      })
+      if (!res.ok) throw new Error('Error generando el Word')
+      const blob = await res.blob()
+      const url  = URL.createObjectURL(blob)
+      const a    = document.createElement('a')
+      a.href     = url
+      a.download = `plan-${plan.weekCode}-${plan.grade}.docx`.replace(/\s/g, '-').toLowerCase()
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (e) {
+      console.error(e)
+      alert('Error generando el documento Word.')
+    } finally {
+      setExportingDocx(false)
+    }
+  }, [plan])
+
+  const downloadPptx = useCallback(async () => {
+    if (!plan) return
+    setExportingPptx(true)
+    try {
+      // @ts-expect-error pptxgenjs types
+      const PptxGenJS = (await import('pptxgenjs')).default
+      const pptx = new PptxGenJS()
+      pptx.layout = 'LAYOUT_WIDE'
+
+      const isEn = plan.language === 'english'
+      const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as const
+      const dayLabels = isEn
+        ? ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+        : ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']
+      const phaseLabels = isEn
+        ? { initial: 'Opening', developing: 'Development', closing: 'Closing' }
+        : { initial: 'Inicio', developing: 'Desarrollo', closing: 'Cierre' }
+
+      // ── Cover slide ──────────────────────────────────────────────────────
+      const cover = pptx.addSlide()
+      cover.background = { color: '0F172A' }
+      cover.addShape('rect', { x: 0, y: 0, w: '100%', h: 0.06, fill: { color: '2563EB' }, line: { color: '2563EB' } })
+      cover.addText(plan.theme, {
+        x: 0.6, y: 0.9, w: 8.8, h: 1.0, color: 'FFFFFF', fontSize: 38, bold: true, align: 'left',
+      })
+      cover.addText(`${plan.unitNumber ? (isEn ? 'Unit ' : 'Unidad ') + plan.unitNumber + ': ' : ''}${plan.unitName}`, {
+        x: 0.6, y: 2.0, w: 8.8, h: 0.5, color: '93C5FD', fontSize: 18, italic: true,
+      })
+      cover.addText([
+        `${plan.grade} · ${plan.subject}`,
+        `${isEn ? 'Week' : 'Semana'} ${plan.weekCode.split('W')[1] ?? plan.weekCode}`,
+        plan.weekStartDate ? `${isEn ? 'Week of' : 'Semana del'} ${plan.weekStartDate}` : '',
+        plan.teacher ? plan.teacher + (plan.school ? '  ·  ' + plan.school : '') : plan.school,
+      ].filter(Boolean).join('   |   '), {
+        x: 0.6, y: 2.65, w: 8.8, h: 0.4, color: '64748B', fontSize: 13,
+      })
+
+      // Weekly objectives
+      const objSlide = pptx.addSlide()
+      objSlide.background = { color: '0F172A' }
+      objSlide.addShape('rect', { x: 0, y: 0, w: '100%', h: 0.55, fill: { color: '1E40AF' }, line: { color: '1E40AF' } })
+      objSlide.addText(isEn ? 'Weekly Objectives' : 'Objetivos de la semana', {
+        x: 0.4, y: 0.1, w: 9.2, h: 0.38, color: 'FFFFFF', fontSize: 18, bold: true,
+      })
+      const objRows = days.map((day, i) => ({
+        text: [
+          { text: dayLabels[i] + ': ', options: { bold: true, color: '93C5FD' } },
+          { text: plan.days[day].objectives?.[0] ?? '—', options: { color: 'E2E8F0' } },
+        ],
+      }))
+      objSlide.addText(objRows as Parameters<typeof objSlide.addText>[0], {
+        x: 0.5, y: 0.75, w: 9.1, h: 6.2, fontSize: 14, lineSpacingMultiple: 2.2, valign: 'top',
+      })
+
+      // ── Day slides ───────────────────────────────────────────────────────
+      days.forEach((day, i) => {
+        const d = plan.days[day]
+        const s = pptx.addSlide()
+        s.background = { color: '0F172A' }
+
+        // Day header bar
+        s.addShape('rect', { x: 0, y: 0, w: '100%', h: 0.55, fill: { color: '1E40AF' }, line: { color: '1E40AF' } })
+        s.addText(dayLabels[i], { x: 0.4, y: 0.08, w: 5, h: 0.38, color: 'FFFFFF', fontSize: 20, bold: true })
+        s.addText(d.standards ?? '', { x: 5.5, y: 0.1, w: 4.1, h: 0.34, color: 'BFDBFE', fontSize: 12, align: 'right' })
+
+        // Objective
+        s.addText(d.objectives?.[0] ?? '—', {
+          x: 0.4, y: 0.65, w: 9.2, h: 0.7, color: 'F1F5F9', fontSize: 16, bold: true, wrap: true,
+        })
+
+        // Three phase columns
+        const phases = ['initial', 'developing', 'closing'] as const
+        const phaseBarColors  = { initial: '1E3A8A', developing: '14532D', closing: '713F12' }
+        const phaseBgColors   = { initial: '172554', developing: '052E16', closing: '1C1204' }
+        const phaseTextColors = { initial: 'BFDBFE', developing: 'BBF7D0', closing: 'FEF08A' }
+        const colX = [0.1, 3.4, 6.7]
+        const colW2 = 3.1
+
+        phases.forEach((phase, pi) => {
+          const cx = colX[pi]
+          s.addShape('rect', { x: cx, y: 1.45, w: colW2, h: 0.36, fill: { color: phaseBarColors[phase] }, line: { color: phaseBarColors[phase] } })
+          s.addText(phaseLabels[phase].toUpperCase(), {
+            x: cx + 0.1, y: 1.48, w: colW2 - 0.2, h: 0.3, color: 'FFFFFF', fontSize: 11, bold: true,
+          })
+          s.addShape('rect', { x: cx, y: 1.81, w: colW2, h: 5.1, fill: { color: phaseBgColors[phase] }, line: { color: '1E293B' } })
+          s.addText(d[phase]?.[0] ?? '—', {
+            x: cx + 0.18, y: 1.9, w: colW2 - 0.36, h: 4.9,
+            color: phaseTextColors[phase], fontSize: 13, wrap: true, valign: 'top', lineSpacingMultiple: 1.4,
+          })
+        })
+
+        // Materials
+        if (d.materials?.length) {
+          s.addText((isEn ? '📦 ' : '📦 ') + d.materials.slice(0, 6).join('  ·  '), {
+            x: 0, y: 6.95, w: '100%', h: 0.22, color: '475569', fontSize: 9, align: 'center',
+          })
+        }
+      })
+
+      // ── Materials summary slide ───────────────────────────────────────────
+      const allMats = [...new Set(days.flatMap(d => plan.days[d].materials ?? []))]
+      if (allMats.length) {
+        const ms = pptx.addSlide()
+        ms.background = { color: '0F172A' }
+        ms.addShape('rect', { x: 0, y: 0, w: '100%', h: 0.55, fill: { color: '0F3460' }, line: { color: '0F3460' } })
+        ms.addText(isEn ? 'Materials for the Week' : 'Materiales de la semana', {
+          x: 0.4, y: 0.1, w: 9.2, h: 0.38, color: 'FFFFFF', fontSize: 18, bold: true,
+        })
+        ms.addText(allMats.map(m => '• ' + m).join('\n'), {
+          x: 0.6, y: 0.85, w: 9.0, h: 6.0, color: '94A3B8', fontSize: 15, wrap: true, valign: 'top', lineSpacingMultiple: 1.8,
+        })
+      }
+
+      const filename = `presentacion-${plan.weekCode}-${plan.grade}.pptx`.replace(/\s/g, '-').toLowerCase()
+      await pptx.writeFile({ fileName: filename })
+    } catch (e) {
+      console.error(e)
+      alert('Error generando la presentación.')
+    } finally {
+      setExportingPptx(false)
+    }
+  }, [plan])
+
   if (step === 'generating') return <GeneratingScreen messages={TEACHER_MSGS} />
 
   if (step === 'result' && plan) {
@@ -307,11 +459,36 @@ export default function PlannerPage() {
             <h2 className="text-2xl font-bold">Planificacion generada</h2>
             <p className="text-slate-400 text-sm mt-1">{gradeData?.label} · {getSubjectLabel(subject)} · {unitData?.name} · {t('planner.week')} {week}</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-2">
             <button onClick={downloadPDF} className="px-4 py-2 bg-green-700 hover:bg-green-600 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"/></svg>
               {t('common.downloadPdf')}
             </button>
+
+            {/* Premium exports */}
+            {userRole === 'premium' || userRole === 'institutional' ? (
+              <>
+                <button onClick={downloadDocx} disabled={exportingDocx}
+                  className="px-4 py-2 bg-blue-700 hover:bg-blue-600 disabled:opacity-50 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                  {exportingDocx
+                    ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    : <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd"/></svg>}
+                  Word / Google Docs
+                </button>
+                <button onClick={downloadPptx} disabled={exportingPptx}
+                  className="px-4 py-2 bg-orange-600 hover:bg-orange-500 disabled:opacity-50 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                  {exportingPptx
+                    ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    : <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/></svg>}
+                  PowerPoint
+                </button>
+              </>
+            ) : (
+              <div className="flex items-center gap-1.5 px-3 py-2 bg-amber-950/40 border border-amber-800/40 rounded-lg text-xs text-amber-400">
+                <span>🔒</span> Word · PPT <span className="text-amber-600 ml-1">Premium</span>
+              </div>
+            )}
+
             <button onClick={handleReset} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm font-medium transition-colors">
               {t('planner.newPlan')}
             </button>
