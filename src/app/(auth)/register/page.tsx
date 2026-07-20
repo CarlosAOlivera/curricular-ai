@@ -27,7 +27,7 @@ export default function RegisterPage() {
       setError(error.message)
       setLoading(false)
     } else {
-      router.push('/planner')
+      router.push('/onboarding')
       router.refresh()
     }
   }

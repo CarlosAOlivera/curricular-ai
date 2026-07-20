@@ -11,6 +11,14 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
+  // Redirect to onboarding if profile is incomplete
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('municipality')
+    .eq('id', user.id)
+    .single()
+  if (!profile?.municipality) redirect('/onboarding')
+
   async function signOut() {
     'use server'
     const supabase = await createClient()
