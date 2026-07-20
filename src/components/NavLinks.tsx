@@ -10,6 +10,7 @@ export default function NavLinks() {
     { href: '/rubrica',    key: 'nav.rubrica'    },
     { href: '/assessment', key: 'nav.assessment' },
     { href: '/planilla',   key: 'nav.planilla'   },
+    { href: '/de-leer',    key: 'nav.deleer'     },
     { href: '/history',    key: 'nav.history'    },
     { href: '/profile',    key: 'nav.profile'    },
   ]
