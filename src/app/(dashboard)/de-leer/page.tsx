@@ -8,6 +8,7 @@ import {
   getDeLeerMonth,
   type DeLeerMonth,
 } from '@/lib/curriculum/de-leer'
+import { DE_LEER_LOGO_B64 } from '@/lib/de-leer-logo-b64'
 
 const GRADES = ['K','1','2','3','4','5','6','7','8','9','10','11','12']
 
@@ -36,6 +37,7 @@ export default function DeLeerPage() {
   const [date, setDate] = useState(getNextWednesday())
   const [teacherName, setTeacherName] = useState('')
   const [school, setSchool] = useState('')
+  const [ore, setOre] = useState('')
   const [monthData, setMonthData] = useState<DeLeerMonth | null>(null)
   const [selectedTema, setSelectedTema] = useState('')
   const [activityType, setActivityType] = useState('')
@@ -109,103 +111,373 @@ Responde SOLO con un JSON con esta estructura exacta:
     }
   }
 
+  // PDF completo con planificación pedagógica (para el maestro)
   const downloadPDF = useCallback(async () => {
     if (!plan) return
     const { default: jsPDF } = await import('jspdf')
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'letter' })
 
-    const margin = 20
-    const pw = 215.9 - margin * 2
-    let y = margin
+    const W = 215.9
+    const margin = 15
+    const pw = W - margin * 2
+    let y = 14
 
-    // Header
-    doc.setFontSize(14)
+    // ── Header ──────────────────────────────────────────────
+    // Logo DE Leer (top right)
+    doc.addImage(DE_LEER_LOGO_B64, 'PNG', W - margin - 32, y - 4, 32, 17)
+
+    // Título
+    doc.setFontSize(15)
     doc.setFont('helvetica', 'bold')
-    doc.text('PROYECTO DE LEER — Anejo 1', 215.9 / 2, y, { align: 'center' })
-    y += 7
-    doc.setFontSize(10)
-    doc.setFont('helvetica', 'normal')
-    doc.text('Departamento de Educación de Puerto Rico', 215.9 / 2, y, { align: 'center' })
-    y += 10
-
-    // Info box
-    doc.setDrawColor(100)
-    doc.rect(margin, y, pw, 30)
+    doc.setTextColor(0, 100, 80)
+    doc.text('Proyecto DE Leer', margin, y + 3)
     doc.setFontSize(9)
-    const col1 = margin + 3
-    const col2 = margin + pw / 2 + 3
-    doc.text(`Escuela: ${school || '___________________________'}`, col1, y + 7)
-    doc.text(`Grado y Grupo: ${grade}${group ? `-${group}` : ''}`, col2, y + 7)
-    doc.text(`Fecha: ${date}`, col1, y + 14)
-    doc.text(`Maestro/a: ${teacherName || '___________________________'}`, col2, y + 14)
-    doc.text(`Mes / Lema: ${monthData?.lema || ''}`, col1, y + 21)
-    y += 35
+    doc.setFont('helvetica', 'normal')
+    doc.setTextColor(80, 80, 80)
+    doc.text('Planificación Docente — Departamento de Educación de Puerto Rico', margin, y + 9)
+    y += 22
 
-    // Tema y lectura
+    // ── Info grid ───────────────────────────────────────────
+    doc.setFillColor(240, 248, 240)
+    doc.rect(margin, y, pw, 28, 'F')
+    doc.setDrawColor(180, 220, 180)
+    doc.rect(margin, y, pw, 28)
+    doc.setTextColor(0, 0, 0)
+    doc.setFontSize(8.5)
+    const L = margin + 3
+    const R = W / 2 + 3
+
+    doc.setFont('helvetica', 'bold')
+    doc.text('Escuela:', L, y + 7)
+    doc.setFont('helvetica', 'normal')
+    doc.text(school || '—', L + 17, y + 7)
+
+    doc.setFont('helvetica', 'bold')
+    doc.text('Grado:', R, y + 7)
+    doc.setFont('helvetica', 'normal')
+    doc.text(`${grade}${group ? ' — Grupo ' + group : ''}`, R + 14, y + 7)
+
+    doc.setFont('helvetica', 'bold')
+    doc.text('Maestro/a:', L, y + 14)
+    doc.setFont('helvetica', 'normal')
+    doc.text(teacherName || '—', L + 21, y + 14)
+
+    doc.setFont('helvetica', 'bold')
+    doc.text('Fecha:', R, y + 14)
+    doc.setFont('helvetica', 'normal')
+    doc.text(date, R + 14, y + 14)
+
+    doc.setFont('helvetica', 'bold')
+    doc.text('Mes:', L, y + 21)
+    doc.setFont('helvetica', 'normal')
+    doc.text(monthData?.name || '—', L + 10, y + 21)
+
+    doc.setFont('helvetica', 'bold')
+    doc.text('Lema:', R, y + 21)
+    doc.setFont('helvetica', 'normal')
+    const lemaShort = doc.splitTextToSize(monthData?.lema || '', pw / 2 - 16)[0] || ''
+    doc.text(lemaShort, R + 13, y + 21)
+    y += 34
+
+    // ── Tema + Lectura ──────────────────────────────────────
+    doc.setFillColor(60, 140, 140)
+    doc.rect(margin, y, pw, 8, 'F')
+    doc.setTextColor(255, 255, 255)
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(10)
-    doc.text('TEMA:', margin, y)
-    doc.setFont('helvetica', 'normal')
-    doc.text(selectedTema || monthData?.temas[0] || '', margin + 20, y)
-    y += 7
-    doc.setFont('helvetica', 'bold')
-    doc.text('LECTURA:', margin, y)
-    doc.setFont('helvetica', 'normal')
-    doc.text(`${plan.titulo_lectura} (${plan.tipo_texto})`, margin + 25, y)
-    y += 7
-    doc.text(`Vocabulario clave: ${plan.vocabulario.join(' · ')}`, margin, y)
-    y += 10
+    doc.text('Planificación de la sesión', margin + 3, y + 5.5)
+    doc.setTextColor(0, 0, 0)
+    y += 12
 
-    // Resumen
+    doc.setFontSize(9)
     doc.setFont('helvetica', 'bold')
-    doc.text('Resumen del texto:', margin, y)
+    doc.text('Tema:', margin, y)
+    doc.setFont('helvetica', 'normal')
+    doc.text(selectedTema || monthData?.temas[0] || '', margin + 14, y)
+    y += 6
+
+    doc.setFont('helvetica', 'bold')
+    doc.text('Lectura:', margin, y)
+    doc.setFont('helvetica', 'normal')
+    const lecLines = doc.splitTextToSize(`${plan.titulo_lectura}  (${plan.tipo_texto})`, pw - 20)
+    doc.text(lecLines, margin + 18, y)
+    y += lecLines.length * 4.5 + 3
+
+    doc.setFont('helvetica', 'bold')
+    doc.text('Vocabulario:', margin, y)
+    doc.setFont('helvetica', 'normal')
+    doc.text(plan.vocabulario.join('  ·  '), margin + 25, y)
+    y += 6
+
+    doc.setFont('helvetica', 'bold')
+    doc.text('Resumen:', margin, y)
     y += 5
     doc.setFont('helvetica', 'normal')
+    doc.setFontSize(8.5)
     const resLines = doc.splitTextToSize(plan.resumen, pw)
     doc.text(resLines, margin, y)
-    y += resLines.length * 5 + 5
+    y += resLines.length * 4.2 + 6
 
-    // Stages
+    // ── Etapas ──────────────────────────────────────────────
     const stages = [
-      { label: 'PRELECTURA (Antes de la lectura)', text: plan.prelectura },
-      { label: 'DURANTE LA LECTURA', text: plan.durante },
-      { label: 'POSLECTURA (Después de la lectura / Evaluación)', text: plan.poslectura },
+      { label: 'PRELECTURA', sub: 'Antes de la lectura', text: plan.prelectura,  fill: [220,235,255] as [number,number,number], head: [60,100,180] as [number,number,number] },
+      { label: 'DURANTE',    sub: 'Durante la lectura',  text: plan.durante,      fill: [235,220,255] as [number,number,number], head: [100,60,180] as [number,number,number] },
+      { label: 'POSLECTURA', sub: 'Evaluación de comprensión', text: plan.poslectura, fill: [255,240,210] as [number,number,number], head: [180,120,0] as [number,number,number] },
     ]
 
-    for (const stage of stages) {
-      doc.setFillColor(240, 240, 240)
+    for (const s of stages) {
+      // Header bar
+      doc.setFillColor(...s.head)
       doc.rect(margin, y, pw, 7, 'F')
+      doc.setTextColor(255, 255, 255)
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(9)
-      doc.text(stage.label, margin + 2, y + 5)
-      y += 9
+      doc.text(`${s.label}  —  ${s.sub}`, margin + 3, y + 5)
+      y += 7
+
+      // Content bg
+      const textLines = doc.splitTextToSize(s.text, pw - 6)
+      const boxH = textLines.length * 4.2 + 6
+      doc.setFillColor(...s.fill)
+      doc.rect(margin, y, pw, boxH, 'F')
+      doc.setTextColor(30, 30, 30)
       doc.setFont('helvetica', 'normal')
-      const lines = doc.splitTextToSize(stage.text, pw - 2)
-      doc.text(lines, margin + 2, y)
-      y += lines.length * 5 + 6
+      doc.setFontSize(8.5)
+      doc.text(textLines, margin + 3, y + 5)
+      y += boxH + 4
     }
 
-    // Activity & evaluation
+    // ── Actividad / Evaluación ──────────────────────────────
     if (activityType || evaluationType) {
+      doc.setFontSize(8.5)
+      doc.setTextColor(0, 0, 0)
       doc.setFont('helvetica', 'bold')
       doc.text('Actividad realizada:', margin, y)
       doc.setFont('helvetica', 'normal')
-      doc.text(DE_LEER_ACTIVITIES.find(a => a.id === activityType)?.label || '_______________', margin + 42, y)
-      y += 6
+      doc.text(DE_LEER_ACTIVITIES.find(a => a.id === activityType)?.label || '—', margin + 38, y)
+      y += 5
       doc.setFont('helvetica', 'bold')
-      doc.text('Actividad de evaluación:', margin, y)
+      doc.text('Evaluación:', margin, y)
       doc.setFont('helvetica', 'normal')
-      doc.text(DE_LEER_EVALUATIONS.find(a => a.id === evaluationType)?.label || '_______________', margin + 52, y)
-      y += 6
+      doc.text(DE_LEER_EVALUATIONS.find(a => a.id === evaluationType)?.label || '—', margin + 24, y)
+      y += 8
     }
 
-    // Footer
-    doc.setFontSize(8)
+    // ── Footer ──────────────────────────────────────────────
+    doc.setFontSize(7)
     doc.setTextColor(150)
-    doc.text('NOTA: Incluya la lectura y la actividad de evaluación como anejo. — Generado por Asistente Curricular PR', 215.9 / 2, 275, { align: 'center' })
+    doc.setFont('helvetica', 'normal')
+    doc.text('NOTA: Incluya la lectura y la actividad de evaluación como anejo.', margin, 270)
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(0, 120, 120)
+    doc.text('#lectoresenacción', W / 2, 275, { align: 'center' })
 
-    doc.save(`anejo1-de-leer-${grade}-${date}.pdf`)
+    doc.save(`planificacion-de-leer-${grade}-${date}.pdf`)
   }, [plan, grade, group, date, teacherName, school, monthData, selectedTema, activityType, evaluationType])
+
+  // Anejo 1 oficial DEPR (para entregar al director)
+  // Usa la lista EXACTA del formulario oficial — no la lista expandida de DE_LEER_ACTIVITIES
+  const downloadAnejoOficial = useCallback(async () => {
+    if (!plan) return
+    const { default: jsPDF } = await import('jspdf')
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'letter' })
+
+    const W = 215.9
+    const margin = 15
+    const pw = W - margin * 2
+    let y = 14
+
+    // Items exactos del formulario oficial DEPR
+    const OFICIAL_ACTS = [
+      { id: 'presentacion_digital', label: 'Presentación digital' },
+      { id: 'cuento_poema',         label: 'Cuento o poema digitalizado o ilustrado' },
+      { id: 'recetas',              label: 'Recetas' },
+      { id: 'personalidades',       label: 'Invitación de personalidades para leer en el salón' },
+      { id: 'dramatizacion',        label: 'Dramatización' },
+      { id: 'narracion',            label: 'Narración' },
+      { id: 'refranes',             label: 'Refrenes o trabalenguas' },
+      { id: 'lectura_compartida',   label: 'Lectura compartida' },
+      { id: 'lectura_guiada',       label: 'Lectura guiada o dirigida' },
+      { id: 'lectura_voz_alta',     label: 'Lectura en voz alta' },
+      { id: 'lectura_tutores',      label: 'Lectura con tutores' },
+      { id: 'karaoke',              label: 'Karaoke' },
+    ]
+    const OFICIAL_EVALS = [
+      { id: 'ficha_lectura',        label: 'Ficha de lectura' },
+      { id: 'cadena',               label: 'Desarrollo de eslabón para cadena de lectura' },
+      { id: 'discusion_socializada',label: 'Discusión socializada' },
+      { id: 'respuesta_escrita',    label: 'Respuesta escrita inmediata' },
+      { id: 'vocabulario',          label: 'Discusión de vocabulario en contexto' },
+      { id: 'ejercicio_aplicacion', label: 'Ejercicio de aplicación' },
+      { id: 'trabajo_creativo',     label: 'Trabajo creativo integrando las Bellas Artes' },
+    ]
+
+    // Si la actividad seleccionada no está en la lista oficial, marcar "Otra"
+    const actInOficial = OFICIAL_ACTS.some(a => a.id === activityType)
+    const evalInOficial = OFICIAL_EVALS.some(a => a.id === evaluationType)
+    const otraActLabel = !actInOficial && activityType
+      ? DE_LEER_ACTIVITIES.find(a => a.id === activityType)?.label || '' : ''
+    const otraEvalLabel = !evalInOficial && evaluationType
+      ? DE_LEER_EVALUATIONS.find(a => a.id === evaluationType)?.label || '' : ''
+
+    // Helper checkbox section — modifica y del scope externo
+    const drawSection = (title: string, items: {id:string;label:string}[], selectedId: string, actInList: boolean, otraLabel: string, hasEsquema?: boolean) => {
+      doc.setFillColor(144, 200, 144)
+      doc.rect(margin, y, pw, 7, 'F')
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(9.5)
+      doc.setTextColor(0, 0, 0)
+      doc.text(title, margin + 2, y + 5)
+      y += 12
+
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(8.5)
+
+      for (const item of items) {
+        const checked = actInList && item.id === selectedId
+        doc.setDrawColor(80)
+        doc.rect(margin + 2, y - 3.2, 3.5, 3.5)
+        if (checked) {
+          doc.setFont('helvetica', 'bold')
+          doc.setTextColor(0, 100, 0)
+          doc.text('X', margin + 2.8, y - 0.3)
+          doc.setTextColor(0, 0, 0)
+          doc.setFont('helvetica', 'normal')
+        }
+        doc.text(item.label, margin + 7, y)
+        y += 5.5
+      }
+
+      // Esquema (solo evaluación)
+      if (hasEsquema) {
+        const checkedEsquema = selectedId === 'organizador_grafico'
+        doc.rect(margin + 2, y - 3.2, 3.5, 3.5)
+        if (checkedEsquema) {
+          doc.setFont('helvetica', 'bold'); doc.setTextColor(0,100,0)
+          doc.text('X', margin + 2.8, y - 0.3)
+          doc.setTextColor(0,0,0); doc.setFont('helvetica', 'normal')
+        }
+        doc.text('Esquema u organizadores gráfico:', margin + 7, y)
+        doc.line(margin + 65, y + 0.5, W - margin, y + 0.5)
+        y += 5.5
+      }
+
+      // Otra
+      const otraChecked = !actInList && !!otraLabel
+      doc.rect(margin + 2, y - 3.2, 3.5, 3.5)
+      if (otraChecked) {
+        doc.setFont('helvetica', 'bold'); doc.setTextColor(0,100,0)
+        doc.text('X', margin + 2.8, y - 0.3)
+        doc.setTextColor(0,0,0); doc.setFont('helvetica', 'normal')
+      }
+      doc.text('Otra:', margin + 7, y)
+      if (otraLabel) doc.text(otraLabel, margin + 22, y)
+      doc.line(margin + 21, y + 0.5, W - margin, y + 0.5)
+      y += 7
+    }
+
+    // ── Header ──────────────────────────────────────────────
+    doc.setFontSize(9)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(0, 0, 0)
+    doc.text('Anejo 1', W - margin, y, { align: 'right' })
+
+    doc.setFontSize(6.5)
+    doc.setFont('helvetica', 'normal')
+    doc.text('DEPARTAMENTO DE', margin, y - 3)
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(0, 80, 160)
+    doc.text('EDUCACIÓN', margin, y + 4)
+    doc.setFontSize(5.5)
+    doc.setFont('helvetica', 'normal')
+    doc.setTextColor(0, 0, 0)
+    doc.text('GOBIERNO DE PUERTO RICO', margin, y + 8)
+    y += 16
+
+    // ── Escuela / ORE ───────────────────────────────────────
+    doc.setFontSize(9)
+    const fS = W / 2, fE = W - margin
+    doc.text('Escuela:', fS, y)
+    if (school) doc.text(school, fS + 19, y)
+    doc.line(fS + 18, y + 0.5, fE, y + 0.5)
+    y += 7
+    doc.text('ORE de:', fS, y)
+    if (ore) doc.text(ore, fS + 17, y)
+    doc.line(fS + 16, y + 0.5, fE, y + 0.5)
+    y += 9
+
+    // ── Banner ──────────────────────────────────────────────
+    doc.setFillColor(60, 140, 140)
+    doc.rect(margin, y, pw, 8, 'F')
+    doc.setTextColor(255, 255, 255)
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Planificación docente', W / 2, y + 5.8, { align: 'center' })
+    doc.setTextColor(0, 0, 0)
+    y += 12
+
+    // ── Info grid ───────────────────────────────────────────
+    doc.setFontSize(8.5)
+    doc.setFont('helvetica', 'normal')
+    const c1 = margin, c2 = W / 2, hPw = pw / 2 - 4
+
+    doc.text('Fecha:', c1, y)
+    doc.text(date, c1 + 14, y)
+    doc.line(c1 + 13, y + 0.5, c1 + hPw, y + 0.5)
+    doc.text('Grado y Grupo:', c2, y)
+    doc.text(`${grade}${group ? `-${group}` : ''}`, c2 + 29, y)
+    doc.line(c2 + 28, y + 0.5, W - margin, y + 0.5)
+    y += 6
+
+    doc.text('Maestro:', c1, y)
+    const ts = doc.splitTextToSize(teacherName, hPw - 17)[0] || ''
+    doc.text(ts, c1 + 17, y)
+    doc.line(c1 + 16, y + 0.5, c1 + hPw, y + 0.5)
+    doc.text('Maestro:', c2, y)
+    doc.line(c2 + 16, y + 0.5, W - margin, y + 0.5)
+    y += 6
+
+    doc.text('Tema:', c1, y)
+    const tema = doc.splitTextToSize(selectedTema || monthData?.temas[0] || '', hPw - 13)[0] || ''
+    doc.text(tema, c1 + 13, y)
+    doc.line(c1 + 12, y + 0.5, c1 + hPw, y + 0.5)
+    doc.text('Lectura:', c2, y)
+    const lec = doc.splitTextToSize(plan.titulo_lectura, hPw - 17)[0] || ''
+    doc.text(lec, c2 + 17, y)
+    doc.line(c2 + 16, y + 0.5, W - margin, y + 0.5)
+    y += 10
+
+    // ── Checklists ──────────────────────────────────────────
+    drawSection('Actividad realizada:', OFICIAL_ACTS, activityType, actInOficial, otraActLabel)
+    y += 2
+    drawSection('Actividad de evaluación:', OFICIAL_EVALS, evaluationType, evalInOficial, otraEvalLabel, true)
+    y += 3
+
+    // ── NOTA ────────────────────────────────────────────────
+    doc.setFontSize(7.5)
+    doc.setFont('helvetica', 'bold')
+    doc.text('NOTA.', margin, y)
+    doc.setFont('helvetica', 'normal')
+    doc.text(' Incluya la lectura y la actividad de evaluación como anejo.', margin + 9, y)
+    y += 9
+
+    // ── #lectoresenacción + logo ─────────────────────────────
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(0, 120, 120)
+    doc.text('#lectoresenacción', margin, y)
+    doc.addImage(DE_LEER_LOGO_B64, 'PNG', W - margin - 26, y - 7, 26, 13)
+
+    // Page number
+    doc.setFontSize(9)
+    doc.setTextColor(100)
+    doc.setFont('helvetica', 'normal')
+    doc.text('20', W - margin, 272, { align: 'right' })
+
+    doc.save(`anejo1-oficial-${grade}-${date}.pdf`)
+  }, [plan, grade, group, date, teacherName, school, ore, monthData, selectedTema, activityType, evaluationType])
 
   function handleReset() { setStep('form'); setPlan(null); setError('') }
 
@@ -225,8 +497,11 @@ Responde SOLO con un JSON con esta estructura exacta:
           <p className="text-slate-400 text-sm mt-1">Grado {grade} · {date} · {monthData?.name}</p>
         </div>
         <div className="flex gap-3">
+          <button onClick={downloadAnejoOficial} className="px-4 py-2 bg-green-700 hover:bg-green-600 rounded-lg text-sm font-semibold transition-colors">
+            Anejo 1 Oficial (director)
+          </button>
           <button onClick={downloadPDF} className="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-sm font-semibold transition-colors">
-            Descargar Anejo 1
+            Planificación completa
           </button>
           <button onClick={handleReset} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm font-semibold transition-colors">
             Nueva planificación
@@ -296,6 +571,16 @@ Responde SOLO con un JSON con esta estructura exacta:
           </div>
         </div>
 
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-1.5">ORE de <span className="text-slate-600 text-xs">(opcional)</span></label>
+            <input type="text" value={ore} onChange={e => setOre(e.target.value)}
+              placeholder="Nombre de la ORE"
+              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-green-500 transition-colors" />
+          </div>
+          <div />
+        </div>
+
         <div className="grid grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-1.5">Grado</label>
@@ -345,7 +630,7 @@ Responde SOLO con un JSON con esta estructura exacta:
             <label className="block text-sm font-medium text-slate-300 mb-1.5">Tipo de actividad <span className="text-slate-600 text-xs">(opcional)</span></label>
             <select value={activityType} onChange={e => setActivityType(e.target.value)}
               className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500 transition-colors">
-              <option value="">Claude elige la más apropiada</option>
+              <option value="">La IA elige la más apropiada</option>
               {DE_LEER_ACTIVITIES.map(a => <option key={a.id} value={a.id}>{a.label}</option>)}
             </select>
           </div>
@@ -353,7 +638,7 @@ Responde SOLO con un JSON con esta estructura exacta:
             <label className="block text-sm font-medium text-slate-300 mb-1.5">Evaluación de comprensión <span className="text-slate-600 text-xs">(opcional)</span></label>
             <select value={evaluationType} onChange={e => setEvaluationType(e.target.value)}
               className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500 transition-colors">
-              <option value="">Claude elige la más apropiada</option>
+              <option value="">La IA elige la más apropiada</option>
               {DE_LEER_EVALUATIONS.map(a => <option key={a.id} value={a.id}>{a.label}</option>)}
             </select>
           </div>

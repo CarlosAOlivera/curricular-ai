@@ -71,13 +71,13 @@ export default function DashboardPage() {
         <div className="grid grid-cols-2 gap-4">
           {[
             { titleKey: 'dashboard.createPlan',     descKey: 'dashboard.createPlanDesc',     href: '/planner',    badge: undefined,    color: 'bg-blue-700/40 border-blue-600/40 hover:border-blue-500/60' },
-            { titleKey: 'dashboard.createRubric',   descKey: 'dashboard.createRubricDesc',   href: '/rubrica',    badge: 'Premium',    color: 'bg-violet-700/30 border-violet-600/40 hover:border-violet-500/60' },
-            { titleKey: 'dashboard.createAssessment', descKey: 'dashboard.createAssessmentDesc', href: '/assessment', badge: 'Premium', color: 'bg-violet-700/30 border-violet-600/40 hover:border-violet-500/60' },
-            { titleKey: 'dashboard.createPlanilla', descKey: 'dashboard.createPlanillaDesc', href: '/planilla',   badge: 'Premium',    color: 'bg-amber-700/30 border-amber-600/40 hover:border-amber-500/60' },
+            { titleKey: 'dashboard.createRubric',   descKey: 'dashboard.createRubricDesc',   href: '/rubrica',    badge: 'Premium',    color: 'bg-amber-950/60 border-amber-700/40 hover:border-amber-500/70' },
+            { titleKey: 'dashboard.createAssessment', descKey: 'dashboard.createAssessmentDesc', href: '/assessment', badge: 'Premium', color: 'bg-amber-950/60 border-amber-700/40 hover:border-amber-500/70' },
+            { titleKey: 'dashboard.createPlanilla', descKey: 'dashboard.createPlanillaDesc', href: '/planilla',   badge: 'Premium',    color: 'bg-amber-950/60 border-amber-700/40 hover:border-amber-500/70' },
           ].map(({ titleKey, descKey, href, badge, color }) => (
             <Link key={href} href={href} className={`block rounded-2xl p-6 border transition-all hover:scale-[1.02] ${color}`}>
               {badge && (
-                <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full bg-white/10 text-white mb-3">{badge}</span>
+                <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 mb-3">✦ {badge}</span>
               )}
               <h3 className="text-white font-semibold text-lg">{t(titleKey)}</h3>
               <p className="text-white/70 text-sm mt-1">{t(descKey)}</p>
