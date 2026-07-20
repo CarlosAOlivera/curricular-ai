@@ -328,7 +328,6 @@ export default function PlannerPage() {
     if (!plan) return
     setExportingPptx(true)
     try {
-      // @ts-expect-error pptxgenjs types
       const PptxGenJS = (await import('pptxgenjs')).default
       const pptx = new PptxGenJS()
       pptx.layout = 'LAYOUT_WIDE'
