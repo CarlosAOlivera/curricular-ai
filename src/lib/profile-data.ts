@@ -71,6 +71,9 @@ export const CERTIFICATIONS = [
   'Certificación TESOL / TEFL',
   'Certificación en Tecnología Educativa',
   'Certificación en Administración Escolar',
+  'Elemental K–3',
+  'Elemental K–6',
+  'Educación Ocupacional',
 ]
 
 export const SUBJECTS = [
