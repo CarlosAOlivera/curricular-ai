@@ -367,14 +367,11 @@ export default function PlannerPage() {
       objSlide.addText(isEn ? 'Weekly Objectives' : 'Objetivos de la semana', {
         x: 0.4, y: 0.1, w: 9.2, h: 0.38, color: 'FFFFFF', fontSize: 18, bold: true,
       })
-      const objRows = days.map((day, i) => ({
-        text: [
-          { text: dayLabels[i] + ': ', options: { bold: true, color: '93C5FD' } },
-          { text: plan.days[day].objectives?.[0] ?? '—', options: { color: 'E2E8F0' } },
-        ],
-      }))
-      objSlide.addText(objRows as Parameters<typeof objSlide.addText>[0], {
-        x: 0.5, y: 0.75, w: 9.1, h: 6.2, fontSize: 14, lineSpacingMultiple: 2.2, valign: 'top',
+      const objText = days.map((day, i) =>
+        `${dayLabels[i]}: ${plan.days[day].objectives?.[0] ?? '—'}`
+      ).join('\n\n')
+      objSlide.addText(objText, {
+        x: 0.5, y: 0.75, w: 9.1, h: 6.2, color: 'E2E8F0', fontSize: 14, lineSpacingMultiple: 2.2, valign: 'top',
       })
 
       // ── Day slides ───────────────────────────────────────────────────────
