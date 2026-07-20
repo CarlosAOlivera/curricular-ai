@@ -16,10 +16,20 @@ function parsePlan(content: string): WeeklyPlanData | null {
   try { const p = JSON.parse(content); return p?.version === 2 ? p : null } catch { return null }
 }
 
-function PlanEntry({ plan }: { plan: LessonPlan }) {
+function PlanEntry({ plan, onDelete }: { plan: LessonPlan; onDelete: (id: string) => void }) {
   const { t, lang } = useLanguage()
   const [open, setOpen] = useState(false)
+  const [confirming, setConfirming] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const parsed = parsePlan(plan.content)
+
+  async function handleDelete() {
+    if (!confirming) { setConfirming(true); return }
+    setDeleting(true)
+    const supabase = createClient()
+    await supabase.from('lesson_plans').delete().eq('id', plan.id)
+    onDelete(plan.id)
+  }
 
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3">
@@ -30,11 +40,33 @@ function PlanEntry({ plan }: { plan: LessonPlan }) {
             {plan.subject} · {plan.grade} · {t('common.week')} {plan.week}
           </p>
         </div>
-        <span className="text-slate-500 text-xs shrink-0">
-          {new Date(plan.created_at).toLocaleDateString(lang === 'en' ? 'en-US' : 'es-PR', {
-            year: 'numeric', month: 'short', day: 'numeric'
-          })}
-        </span>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-slate-500 text-xs">
+            {new Date(plan.created_at).toLocaleDateString(lang === 'en' ? 'en-US' : 'es-PR', {
+              year: 'numeric', month: 'short', day: 'numeric'
+            })}
+          </span>
+          {confirming ? (
+            <div className="flex items-center gap-1">
+              <button onClick={handleDelete} disabled={deleting}
+                className="px-2 py-1 bg-red-600 hover:bg-red-500 rounded text-xs font-medium transition-colors disabled:opacity-50">
+                {deleting ? '…' : '¿Borrar?'}
+              </button>
+              <button onClick={() => setConfirming(false)}
+                className="px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs transition-colors">
+                No
+              </button>
+            </div>
+          ) : (
+            <button onClick={handleDelete}
+              className="p-1.5 text-slate-600 hover:text-red-400 hover:bg-red-950/40 rounded transition-colors"
+              title="Borrar planificación">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd"/>
+              </svg>
+            </button>
+          )}
+        </div>
       </div>
       <button
         onClick={() => setOpen(v => !v)}
@@ -104,7 +136,10 @@ export default function HistoryPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {plans.map(plan => <PlanEntry key={plan.id} plan={plan} />)}
+          {plans.map(plan => (
+            <PlanEntry key={plan.id} plan={plan}
+              onDelete={id => setPlans(prev => prev.filter(p => p.id !== id))} />
+          ))}
         </div>
       )}
     </div>
