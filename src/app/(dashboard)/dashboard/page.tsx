@@ -32,18 +32,18 @@ export default function DashboardPage() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold">
+        <h1 className="font-display text-3xl font-semibold text-ink">
           {name ? `${t('dashboard.welcome')}, ${name}` : t('dashboard.welcome')}
         </h1>
-        <p className="text-slate-400 mt-1">{t('dashboard.subtitle')}</p>
+        <p className="text-navy-mid mt-1">{t('dashboard.subtitle')}</p>
       </div>
 
       {/* Stats */}
       <div>
-        <p className="text-xs text-slate-500 uppercase tracking-widest font-medium mb-4">{t('dashboard.stats')}</p>
+        <p className="text-xs text-navy-mid/50 uppercase tracking-widest font-semibold mb-4">{t('dashboard.stats')}</p>
         {loading ? (
           <div className="grid grid-cols-3 gap-4">
-            {[1,2,3].map(i => <div key={i} className="bg-slate-900 border border-slate-800 rounded-2xl p-6 h-32 animate-pulse" />)}
+            {[1,2,3].map(i => <div key={i} className="bg-white border border-navy-tint rounded-2xl p-6 h-32 animate-pulse" />)}
           </div>
         ) : (
           <div className="grid grid-cols-3 gap-4">
@@ -52,13 +52,13 @@ export default function DashboardPage() {
               { key: 'dashboard.rubrics',     count: stats.rubrics,     href: '/rubrica',    icon: '📊' },
               { key: 'dashboard.assessments', count: stats.assessments, href: '/assessment', icon: '📝' },
             ].map(({ key, count, href, icon }) => (
-              <Link key={href} href={href} className="block bg-slate-900 border border-slate-800 hover:border-slate-600 rounded-2xl p-6 transition-all group">
+              <Link key={href} href={href} className="block bg-white border border-navy-tint hover:border-navy-mid/40 hover:shadow-sm rounded-2xl p-6 transition-all group">
                 <div className="flex items-start justify-between mb-4">
                   <span className="text-3xl">{icon}</span>
-                  <span className="text-4xl font-bold text-white group-hover:text-blue-400 transition-colors">{count}</span>
+                  <span className="text-4xl font-bold text-navy group-hover:text-navy-mid transition-colors">{count}</span>
                 </div>
-                <p className="text-slate-300 font-medium">{t(key)}</p>
-                <p className="text-slate-600 text-xs mt-1 group-hover:text-slate-400 transition-colors">{t('dashboard.go')}</p>
+                <p className="text-ink font-medium">{t(key)}</p>
+                <p className="text-navy-mid/40 text-xs mt-1 group-hover:text-navy-mid transition-colors">{t('dashboard.go')}</p>
               </Link>
             ))}
           </div>
@@ -67,20 +67,20 @@ export default function DashboardPage() {
 
       {/* Quick actions */}
       <div>
-        <p className="text-xs text-slate-500 uppercase tracking-widest font-medium mb-4">{t('dashboard.quickActions')}</p>
+        <p className="text-xs text-navy-mid/50 uppercase tracking-widest font-semibold mb-4">{t('dashboard.quickActions')}</p>
         <div className="grid grid-cols-2 gap-4">
           {[
-            { titleKey: 'dashboard.createPlan',     descKey: 'dashboard.createPlanDesc',     href: '/planner',    badge: undefined,    color: 'bg-blue-700/40 border-blue-600/40 hover:border-blue-500/60' },
-            { titleKey: 'dashboard.createRubric',   descKey: 'dashboard.createRubricDesc',   href: '/rubrica',    badge: 'Premium',    color: 'bg-amber-950/60 border-amber-700/40 hover:border-amber-500/70' },
-            { titleKey: 'dashboard.createAssessment', descKey: 'dashboard.createAssessmentDesc', href: '/assessment', badge: 'Premium', color: 'bg-amber-950/60 border-amber-700/40 hover:border-amber-500/70' },
-            { titleKey: 'dashboard.createPlanilla', descKey: 'dashboard.createPlanillaDesc', href: '/planilla',   badge: 'Premium',    color: 'bg-amber-950/60 border-amber-700/40 hover:border-amber-500/70' },
+            { titleKey: 'dashboard.createPlan',       descKey: 'dashboard.createPlanDesc',       href: '/planner',    badge: undefined, color: 'bg-navy border-navy hover:bg-navy-mid' },
+            { titleKey: 'dashboard.createRubric',     descKey: 'dashboard.createRubricDesc',     href: '/rubrica',    badge: 'Premium', color: 'bg-gold-tint border-gold/30 hover:border-gold/60' },
+            { titleKey: 'dashboard.createAssessment', descKey: 'dashboard.createAssessmentDesc', href: '/assessment', badge: 'Premium', color: 'bg-gold-tint border-gold/30 hover:border-gold/60' },
+            { titleKey: 'dashboard.createPlanilla',   descKey: 'dashboard.createPlanillaDesc',   href: '/planilla',   badge: 'Premium', color: 'bg-gold-tint border-gold/30 hover:border-gold/60' },
           ].map(({ titleKey, descKey, href, badge, color }) => (
-            <Link key={href} href={href} className={`block rounded-2xl p-6 border transition-all hover:scale-[1.02] ${color}`}>
+            <Link key={href} href={href} className={`block rounded-2xl p-6 border transition-all hover:scale-[1.01] hover:shadow-sm ${color}`}>
               {badge && (
-                <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 mb-3">✦ {badge}</span>
+                <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full bg-gold/20 text-gold-deep mb-3">✦ {badge}</span>
               )}
-              <h3 className="text-white font-semibold text-lg">{t(titleKey)}</h3>
-              <p className="text-white/70 text-sm mt-1">{t(descKey)}</p>
+              <h3 className={`font-display font-semibold text-lg ${badge ? 'text-ink' : 'text-white'}`}>{t(titleKey)}</h3>
+              <p className={`text-sm mt-1 ${badge ? 'text-ink/60' : 'text-white/70'}`}>{t(descKey)}</p>
             </Link>
           ))}
         </div>

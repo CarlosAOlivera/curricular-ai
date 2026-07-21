@@ -23,8 +23,8 @@ export default function NavLinks() {
           href={link.href}
           className={`px-2.5 py-1.5 rounded-lg transition-colors text-xs font-medium ${
             link.premium
-              ? 'text-amber-400 hover:text-amber-300 hover:bg-amber-950/40'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800'
+              ? 'text-gold hover:text-gold hover:bg-gold/10'
+              : 'text-white/70 hover:text-white hover:bg-white/10'
           }`}
         >
           {link.premium && <span className="mr-0.5 opacity-70">✦</span>}

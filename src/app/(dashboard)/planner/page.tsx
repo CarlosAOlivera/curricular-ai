@@ -31,10 +31,10 @@ function GeneratingScreen({ messages }: { messages: string[] }) {
   }, [messages.length])
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
-      <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-      <p className="text-slate-300 text-lg">{t('planner.generating')}</p>
-      <p className="text-slate-500 text-sm">{t('planner.generatingMsg')}</p>
-      <p className="text-slate-600 text-xs italic max-w-xs text-center" style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.4s' }}>
+      <div className="w-12 h-12 border-4 border-navy border-t-transparent rounded-full animate-spin" />
+      <p className="text-ink text-lg">{t('planner.generating')}</p>
+      <p className="text-navy-mid text-sm">{t('planner.generatingMsg')}</p>
+      <p className="text-navy-mid/50 text-xs italic max-w-xs text-center" style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.4s' }}>
         {messages[idx]}
       </p>
     </div>
@@ -452,11 +452,11 @@ export default function PlannerPage() {
 
         <div className="flex items-center justify-between no-print">
           <div>
-            <h2 className="text-2xl font-bold">Planificacion generada</h2>
-            <p className="text-slate-400 text-sm mt-1">{gradeData?.label} · {getSubjectLabel(subject)} · {unitData?.name} · {t('planner.week')} {week}</p>
+            <h2 className="font-display text-2xl font-semibold text-ink">Planificacion generada</h2>
+            <p className="text-navy-mid text-sm mt-1">{gradeData?.label} · {getSubjectLabel(subject)} · {unitData?.name} · {t('planner.week')} {week}</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <button onClick={downloadPDF} className="px-4 py-2 bg-green-700 hover:bg-green-600 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+            <button onClick={downloadPDF} className="px-4 py-2 bg-teal hover:bg-teal-deep text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"/></svg>
               {t('common.downloadPdf')}
             </button>
@@ -465,7 +465,7 @@ export default function PlannerPage() {
             {userRole === 'premium' || userRole === 'institutional' ? (
               <>
                 <button onClick={downloadDocx} disabled={exportingDocx}
-                  className="px-4 py-2 bg-blue-700 hover:bg-blue-600 disabled:opacity-50 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                  className="px-4 py-2 bg-navy hover:bg-navy-mid disabled:opacity-50 rounded-lg text-sm font-medium text-white transition-colors flex items-center gap-2">
                   {exportingDocx
                     ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     : <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd"/></svg>}
@@ -474,26 +474,26 @@ export default function PlannerPage() {
                 {/* PowerPoint temporarily disabled */}
               </>
             ) : (
-              <div className="flex items-center gap-1.5 px-3 py-2 bg-amber-950/40 border border-amber-800/40 rounded-lg text-xs text-amber-400">
-                <span>🔒</span> Word / Google Docs <span className="text-amber-600 ml-1">Premium</span>
+              <div className="flex items-center gap-1.5 px-3 py-2 bg-gold-tint border border-gold/30 rounded-lg text-xs text-gold-deep">
+                <span>🔒</span> Word / Google Docs <span className="text-gold-deep/60 ml-1">Premium</span>
               </div>
             )}
 
-            <button onClick={handleReset} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm font-medium transition-colors">
+            <button onClick={handleReset} className="px-4 py-2 bg-navy-tint hover:bg-navy-mid/20 text-ink rounded-lg text-sm font-medium transition-colors">
               {t('planner.newPlan')}
             </button>
           </div>
         </div>
 
         {/* Premium callout */}
-        <div className="no-print bg-violet-900/20 border border-violet-700/30 rounded-xl p-4 flex items-center justify-between gap-4">
+        <div className="no-print bg-gold-tint border border-gold/30 rounded-xl p-4 flex items-center justify-between gap-4">
           <div>
-            <p className="text-violet-300 font-medium text-sm">{t('planner.premiumFeatures')}</p>
-            <p className="text-slate-500 text-xs mt-0.5">Funciones Premium — selecciona el dia y la fase de la clase</p>
+            <p className="text-gold-deep font-medium text-sm">{t('planner.premiumFeatures')}</p>
+            <p className="text-navy-mid/60 text-xs mt-0.5">Funciones Premium — selecciona el dia y la fase de la clase</p>
           </div>
           <div className="flex gap-2 shrink-0">
-            <Link href="/rubrica"    className="px-3 py-2 bg-violet-700 hover:bg-violet-600 rounded-lg text-xs font-semibold transition-colors">{t('nav.rubrica')}</Link>
-            <Link href="/assessment" className="px-3 py-2 bg-violet-700 hover:bg-violet-600 rounded-lg text-xs font-semibold transition-colors">{t('nav.assessment')}</Link>
+            <Link href="/rubrica"    className="px-3 py-2 bg-navy hover:bg-navy-mid text-white rounded-lg text-xs font-semibold transition-colors">{t('nav.rubrica')}</Link>
+            <Link href="/assessment" className="px-3 py-2 bg-navy hover:bg-navy-mid text-white rounded-lg text-xs font-semibold transition-colors">{t('nav.assessment')}</Link>
           </div>
         </div>
 
@@ -509,42 +509,42 @@ export default function PlannerPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">{t('planner.title')}</h1>
-        <p className="text-slate-400 mt-2">{t('planner.subtitle')}</p>
+        <h1 className="font-display text-3xl font-semibold text-ink">{t('planner.title')}</h1>
+        <p className="text-navy-mid mt-2">{t('planner.subtitle')}</p>
       </div>
 
       <form onSubmit={handleGenerate} className="space-y-6">
         {/* Teacher info */}
-        <div className="bg-slate-900 border border-slate-800 rounded-lg p-4 space-y-4">
-          <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">{t('planner.teacherInfo')}</p>
+        <div className="bg-white border border-navy-tint rounded-lg p-4 space-y-4">
+          <p className="text-xs text-navy-mid/50 font-medium uppercase tracking-wide">{t('planner.teacherInfo')}</p>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">{t('planner.teacherName')}</label>
+              <label className="block text-sm font-medium text-ink mb-1">{t('planner.teacherName')}</label>
               <input type="text" value={teacherName} onChange={e => setTeacherName(e.target.value)}
                 placeholder={t('planner.teacherNamePlaceholder')}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500" />
+                className="w-full bg-paper border border-navy-tint rounded-lg px-3 py-2 text-sm text-ink placeholder-ink/30 focus:outline-none focus:border-navy" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">{t('planner.school')}</label>
+              <label className="block text-sm font-medium text-ink mb-1">{t('planner.school')}</label>
               <input type="text" value={school} onChange={e => setSchool(e.target.value)}
                 placeholder={t('planner.schoolPlaceholder')}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500" />
+                className="w-full bg-paper border border-navy-tint rounded-lg px-3 py-2 text-sm text-ink placeholder-ink/30 focus:outline-none focus:border-navy" />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">{t('planner.weekStart')}</label>
+            <label className="block text-sm font-medium text-ink mb-1">{t('planner.weekStart')}</label>
             <input type="date" value={weekStartDate} onChange={e => setWeekStartDate(e.target.value)}
-              className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500" />
+              className="bg-paper border border-navy-tint rounded-lg px-3 py-2 text-sm text-ink focus:outline-none focus:border-navy" />
           </div>
         </div>
 
         {/* Subject */}
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">{t('planner.subject')}</label>
+          <label className="block text-sm font-medium text-ink mb-2">{t('planner.subject')}</label>
           <div className="flex flex-wrap gap-2">
             {SUBJECTS.map(s => (
               <button key={s.id} type="button" onClick={() => handleSubjectChange(s.id)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${subject === s.id ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-300 hover:border-slate-500'}`}>
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${subject === s.id ? 'bg-navy border-navy text-white' : 'bg-white border-navy-tint text-ink hover:border-navy-mid/40'}`}>
                 {s.label}
               </button>
             ))}
@@ -553,11 +553,11 @@ export default function PlannerPage() {
 
         {/* Grade */}
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">{t('planner.grade')}</label>
+          <label className="block text-sm font-medium text-ink mb-2">{t('planner.grade')}</label>
           <div className="flex flex-wrap gap-2">
             {ALL_GRADES.map(g => (
               <button key={g.value} type="button" onClick={() => handleGradeChange(g.value)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border ${grade === g.value ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-300 hover:border-slate-500'}`}>
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border ${grade === g.value ? 'bg-navy border-navy text-white' : 'bg-white border-navy-tint text-ink hover:border-navy-mid/40'}`}>
                 {g.label}
               </button>
             ))}
@@ -567,19 +567,19 @@ export default function PlannerPage() {
         {/* Unit */}
         {grade && (
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">{t('planner.unit')}</label>
+            <label className="block text-sm font-medium text-ink mb-2">{t('planner.unit')}</label>
             {gradeData ? (
               <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
                 {gradeData.units.map(u => (
                   <button key={u.id} type="button" onClick={() => { setUnitId(u.id); setWeek('') }}
-                    className={`w-full text-left px-4 py-3 rounded-xl border transition-colors ${unitId === u.id ? 'bg-blue-600/20 border-blue-500 text-white' : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-600'}`}>
+                    className={`w-full text-left px-4 py-3 rounded-xl border transition-colors ${unitId === u.id ? 'bg-navy/10 border-navy text-ink' : 'bg-white border-navy-tint text-ink hover:border-navy-mid/40'}`}>
                     <p className="font-medium text-sm">{u.name}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">{u.standards.slice(0,2).join(' · ')}</p>
+                    <p className="text-xs text-navy-mid/50 mt-0.5">{u.standards.slice(0,2).join(' · ')}</p>
                   </button>
                 ))}
               </div>
             ) : (
-              <p className="text-slate-500 text-sm">{t('planner.unitNotAvailable')}</p>
+              <p className="text-navy-mid/50 text-sm">{t('planner.unitNotAvailable')}</p>
             )}
           </div>
         )}
@@ -587,11 +587,11 @@ export default function PlannerPage() {
         {/* Week */}
         {unitData && (
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">{t('planner.week')}</label>
+            <label className="block text-sm font-medium text-ink mb-2">{t('planner.week')}</label>
             <div className="flex flex-wrap gap-2">
               {unitData.weeks.map(w => (
                 <button key={w} type="button" onClick={() => setWeek(w)}
-                  className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors border ${week === w ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-300 hover:border-slate-500'}`}>
+                  className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors border ${week === w ? 'bg-navy border-navy text-white' : 'bg-white border-navy-tint text-ink hover:border-navy-mid/40'}`}>
                   {w}
                 </button>
               ))}
@@ -601,20 +601,19 @@ export default function PlannerPage() {
 
         {/* Notes */}
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1">
-            {t('planner.notes')} <span className="text-slate-600 text-xs">({t('planner.optional')})</span>
+          <label className="block text-sm font-medium text-ink mb-1">
+            {t('planner.notes')} <span className="text-navy-mid/40 text-xs">({t('planner.optional')})</span>
           </label>
-          <p className="text-xs text-slate-500 mb-2">{t('planner.notesHint')}</p>
+          <p className="text-xs text-navy-mid/50 mb-2">{t('planner.notesHint')}</p>
           <textarea value={teacherNotes} onChange={e => setTeacherNotes(e.target.value)}
             placeholder={t('planner.notesPlaceholder')} rows={4}
-            className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 resize-none" />
+            className="w-full bg-white border border-navy-tint rounded-lg px-3 py-2 text-sm text-ink placeholder-ink/30 focus:outline-none focus:border-navy resize-none" />
         </div>
 
-        {error && <p className="text-red-400 text-sm">{error}</p>}
+        {error && <p className="text-clay text-sm">{error}</p>}
 
         <button type="submit" disabled={!gradeData || !unitData || week === ''}
-          className="w-full py-4 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-semibold text-lg transition-colors">
-    
+          className="w-full py-4 bg-navy hover:bg-navy-mid disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-semibold text-lg text-white transition-colors">
           {t('planner.generateBtn')}
         </button>
       </form>

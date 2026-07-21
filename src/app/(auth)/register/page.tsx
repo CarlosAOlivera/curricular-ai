@@ -33,46 +33,49 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
+    <main className="min-h-screen bg-paper flex items-center justify-center px-4">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-white">Crear cuenta</h1>
-          <p className="text-slate-400 mt-2">Gratis — sin tarjeta de crédito</p>
+          <p className="text-xs font-semibold text-navy-mid uppercase tracking-widest mb-3">DEPR · Puerto Rico</p>
+          <h1 className="font-display text-3xl font-semibold text-ink">Crear cuenta</h1>
+          <p className="text-navy-mid mt-2">Gratis — sin tarjeta de crédito</p>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm text-slate-300 mb-1">Nombre completo</label>
-            <input type="text" required value={fullName} onChange={e => setFullName(e.target.value)}
-              className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-              placeholder="Nombre y Apellidos" />
-          </div>
-          <div>
-            <label className="block text-sm text-slate-300 mb-1">Correo electrónico</label>
-            <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-              placeholder="correo electronico" />
-          </div>
-          <div>
-            <label className="block text-sm text-slate-300 mb-1">Escuela</label>
-            <input type="text" value={school} onChange={e => setSchool(e.target.value)}
-              className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-              placeholder="Escuela ..." />
-          </div>
-          <div>
-            <label className="block text-sm text-slate-300 mb-1">Contraseña</label>
-            <input type="password" required minLength={8} value={password} onChange={e => setPassword(e.target.value)}
-              className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-              placeholder="Mínimo 8 caracteres" />
-          </div>
-          {error && <p className="text-red-400 text-sm">{error}</p>}
-          <button type="submit" disabled={loading}
-            className="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 rounded-lg font-semibold text-white transition-colors">
-            {loading ? 'Creando cuenta...' : 'Crear cuenta gratis'}
-          </button>
-        </form>
-        <p className="text-center text-slate-400 text-sm">
+        <div className="bg-white border border-navy-tint rounded-2xl p-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-ink mb-1.5">Nombre completo</label>
+              <input type="text" required value={fullName} onChange={e => setFullName(e.target.value)}
+                className="w-full px-4 py-2.5 bg-paper border border-navy-tint rounded-xl text-ink placeholder-ink/30 focus:outline-none focus:border-navy transition-colors"
+                placeholder="Nombre y Apellidos" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-ink mb-1.5">Correo electrónico</label>
+              <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
+                className="w-full px-4 py-2.5 bg-paper border border-navy-tint rounded-xl text-ink placeholder-ink/30 focus:outline-none focus:border-navy transition-colors"
+                placeholder="correo@escuela.pr" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-ink mb-1.5">Escuela</label>
+              <input type="text" value={school} onChange={e => setSchool(e.target.value)}
+                className="w-full px-4 py-2.5 bg-paper border border-navy-tint rounded-xl text-ink placeholder-ink/30 focus:outline-none focus:border-navy transition-colors"
+                placeholder="Nombre de tu escuela" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-ink mb-1.5">Contraseña</label>
+              <input type="password" required minLength={8} value={password} onChange={e => setPassword(e.target.value)}
+                className="w-full px-4 py-2.5 bg-paper border border-navy-tint rounded-xl text-ink placeholder-ink/30 focus:outline-none focus:border-navy transition-colors"
+                placeholder="Mínimo 8 caracteres" />
+            </div>
+            {error && <p className="text-clay text-sm">{error}</p>}
+            <button type="submit" disabled={loading}
+              className="w-full py-3 bg-navy hover:bg-navy-mid disabled:opacity-50 rounded-xl font-semibold text-white transition-colors">
+              {loading ? 'Creando cuenta...' : 'Crear cuenta gratis'}
+            </button>
+          </form>
+        </div>
+        <p className="text-center text-navy-mid text-sm">
           ¿Ya tienes cuenta?{' '}
-          <Link href="/login" className="text-blue-400 hover:underline">Inicia sesión</Link>
+          <Link href="/login" className="text-navy font-semibold hover:text-navy-mid">Inicia sesión</Link>
         </p>
       </div>
     </main>

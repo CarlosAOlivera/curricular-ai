@@ -16,15 +16,15 @@ function ChipGroup({ options, selected, onChange, color = 'blue' }:
   { options: string[]; selected: string[]; onChange: (v: string[]) => void; color?: 'blue' | 'teal' }) {
   const safe = Array.isArray(selected) ? selected : []
   const active = color === 'blue'
-    ? 'bg-blue-600 border-blue-500 text-white'
-    : 'bg-teal-700 border-teal-500 text-white'
+    ? 'bg-navy border-navy text-white'
+    : 'bg-teal border-teal-deep text-white'
   return (
     <div className="flex flex-wrap gap-2">
       {options.map(opt => (
         <button key={opt} type="button"
           onClick={() => onChange(safe.includes(opt) ? safe.filter(s => s !== opt) : [...safe, opt])}
           className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
-            safe.includes(opt) ? active : 'bg-slate-900 border-slate-700 text-slate-300 hover:border-slate-500'
+            safe.includes(opt) ? active : 'bg-white border-navy-tint text-ink hover:border-navy-mid/40'
           }`}>
           {opt}
         </button>
@@ -41,8 +41,8 @@ function SingleSelect({ options, value, onChange }:
         <button key={opt} type="button" onClick={() => onChange(opt)}
           className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
             value === opt
-              ? 'bg-blue-600 border-blue-500 text-white'
-              : 'bg-slate-900 border-slate-700 text-slate-300 hover:border-slate-500'
+              ? 'bg-navy border-navy text-white'
+              : 'bg-white border-navy-tint text-ink hover:border-navy-mid/40'
           }`}>
           {opt}
         </button>
@@ -132,29 +132,29 @@ export default function ProfilePage() {
 
   if (loading) return (
     <div className="flex justify-center py-20">
-      <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      <div className="w-8 h-8 border-4 border-navy border-t-transparent rounded-full animate-spin" />
     </div>
   )
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">{t('profile.title')}</h1>
-        <p className="text-slate-400 mt-1">{t('profile.subtitle')}</p>
+        <h1 className="font-display text-3xl font-semibold text-ink">{t('profile.title')}</h1>
+        <p className="text-navy-mid mt-1">{t('profile.subtitle')}</p>
       </div>
 
       {/* Plan badge */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+      <div className="bg-white border border-navy-tint rounded-xl p-4 flex items-center justify-between">
         <div>
-          <p className="text-xs text-slate-500 uppercase tracking-wide">{t('profile.plan')}</p>
-          <p className="text-white font-semibold mt-0.5">{roleLabel[profile.role] || profile.role}</p>
+          <p className="text-xs text-navy-mid/50 uppercase tracking-wide">{t('profile.plan')}</p>
+          <p className="text-ink font-semibold mt-0.5">{roleLabel[profile.role] || profile.role}</p>
         </div>
         <div>
-          <p className="text-xs text-slate-500 uppercase tracking-wide">{t('profile.email')}</p>
-          <p className="text-slate-300 text-sm mt-0.5">{profile.email}</p>
+          <p className="text-xs text-navy-mid/50 uppercase tracking-wide">{t('profile.email')}</p>
+          <p className="text-navy-mid text-sm mt-0.5">{profile.email}</p>
         </div>
         {profile.role === 'free' && (
-          <button className="px-4 py-2 bg-violet-600 hover:bg-violet-500 rounded-lg text-sm font-semibold transition-colors">
+          <button className="px-4 py-2 bg-gold hover:bg-gold-deep text-ink rounded-lg text-sm font-semibold transition-colors">
             {t('common.upgradePremium')}
           </button>
         )}
@@ -163,40 +163,40 @@ export default function ProfilePage() {
       <form onSubmit={handleSave} className="space-y-7">
         {/* ── Sección: Información personal ────────────────────────────── */}
         <div className="space-y-5">
-          <h2 className="text-lg font-semibold text-white border-b border-slate-800 pb-2">Información personal</h2>
+          <h2 className="text-lg font-semibold text-ink border-b border-navy-tint pb-2">Información personal</h2>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">{t('profile.name')}</label>
+            <label className="block text-sm font-medium text-ink mb-1.5">{t('profile.name')}</label>
             <input type="text" value={profile.full_name}
               onChange={e => setProfile(p => ({ ...p, full_name: e.target.value }))}
               placeholder={t('profile.namePlaceholder')}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors" />
+              className="w-full bg-white border border-navy-tint rounded-xl px-4 py-3 text-ink placeholder-ink/30 focus:outline-none focus:border-navy transition-colors" />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">{t('profile.school')}</label>
+            <label className="block text-sm font-medium text-ink mb-1.5">{t('profile.school')}</label>
             <input type="text" value={profile.school}
               onChange={e => setProfile(p => ({ ...p, school: e.target.value }))}
               placeholder={t('profile.schoolPlaceholder')}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors" />
+              className="w-full bg-white border border-navy-tint rounded-xl px-4 py-3 text-ink placeholder-ink/30 focus:outline-none focus:border-navy transition-colors" />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Municipio</label>
+            <label className="block text-sm font-medium text-ink mb-1.5">Municipio</label>
             <select value={profile.municipality} onChange={e => handleMunicipalityChange(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors">
+              className="w-full bg-white border border-navy-tint rounded-xl px-4 py-3 text-ink focus:outline-none focus:border-navy transition-colors">
               <option value="">Selecciona un municipio…</option>
               {MUNICIPIOS.map(m => <option key={m} value={m}>{m}</option>)}
             </select>
             {profile.region && (
-              <p className="text-slate-500 text-xs mt-1.5">
-                Región educativa DEPR: <span className="text-blue-400 font-medium">{profile.region}</span>
+              <p className="text-navy-mid/60 text-xs mt-1.5">
+                Región educativa DEPR: <span className="text-navy font-medium">{profile.region}</span>
               </p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Nivel escolar</label>
+            <label className="block text-sm font-medium text-ink mb-2">Nivel escolar</label>
             <SingleSelect options={SCHOOL_LEVELS} value={profile.school_level}
               onChange={v => setProfile(p => ({ ...p, school_level: v }))} />
           </div>
@@ -204,23 +204,23 @@ export default function ProfilePage() {
 
         {/* ── Sección: Experiencia y preparación ───────────────────────── */}
         <div className="space-y-5">
-          <h2 className="text-lg font-semibold text-white border-b border-slate-800 pb-2">Experiencia y preparación</h2>
+          <h2 className="text-lg font-semibold text-ink border-b border-navy-tint pb-2">Experiencia y preparación</h2>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Años de experiencia docente</label>
+            <label className="block text-sm font-medium text-ink mb-2">Años de experiencia docente</label>
             <SingleSelect options={YEARS_EXPERIENCE} value={profile.years_experience}
               onChange={v => setProfile(p => ({ ...p, years_experience: v }))} />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Preparación académica</label>
+            <label className="block text-sm font-medium text-ink mb-2">Preparación académica</label>
             <SingleSelect options={ACADEMIC_PREPARATION} value={profile.academic_preparation}
               onChange={v => setProfile(p => ({ ...p, academic_preparation: v }))} />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
-              Certificaciones <span className="text-slate-500 text-xs">(selecciona todas las que apliquen)</span>
+            <label className="block text-sm font-medium text-ink mb-2">
+              Certificaciones <span className="text-navy-mid/50 text-xs">(selecciona todas las que apliquen)</span>
             </label>
             <ChipGroup options={CERTIFICATIONS} selected={certs} onChange={setCerts} color="teal" />
           </div>
@@ -228,26 +228,26 @@ export default function ProfilePage() {
 
         {/* ── Sección: Lo que enseñas ───────────────────────────────────── */}
         <div className="space-y-5">
-          <h2 className="text-lg font-semibold text-white border-b border-slate-800 pb-2">Lo que enseñas</h2>
+          <h2 className="text-lg font-semibold text-ink border-b border-navy-tint pb-2">Lo que enseñas</h2>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">{t('profile.subject')}</label>
+            <label className="block text-sm font-medium text-ink mb-2">{t('profile.subject')}</label>
             <ChipGroup options={SUBJECTS} selected={subjects} onChange={setSubjects} />
-            {subjects.length === 0 && <p className="text-slate-500 text-xs mt-1">{t('profile.selectSubject')}</p>}
+            {subjects.length === 0 && <p className="text-navy-mid/50 text-xs mt-1">{t('profile.selectSubject')}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">{t('profile.grade')}</label>
+            <label className="block text-sm font-medium text-ink mb-2">{t('profile.grade')}</label>
             <ChipGroup options={GRADES} selected={grades} onChange={setGrades} />
-            {grades.length === 0 && <p className="text-slate-500 text-xs mt-1">{t('profile.selectGrade')}</p>}
+            {grades.length === 0 && <p className="text-navy-mid/50 text-xs mt-1">{t('profile.selectGrade')}</p>}
           </div>
         </div>
 
-        {error && <p className="text-red-400 text-sm">{error}</p>}
-        {saved && <p className="text-green-400 text-sm">{t('profile.saved')}</p>}
+        {error && <p className="text-clay text-sm">{error}</p>}
+        {saved && <p className="text-teal text-sm">{t('profile.saved')}</p>}
 
         <button type="submit" disabled={saving}
-          className="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 rounded-xl font-semibold transition-colors">
+          className="w-full py-3 bg-navy hover:bg-navy-mid disabled:opacity-50 rounded-xl font-semibold text-white transition-colors">
           {saving ? t('common.saving') : t('profile.saveBtn')}
         </button>
       </form>

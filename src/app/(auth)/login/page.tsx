@@ -27,54 +27,57 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
+    <main className="min-h-screen bg-paper flex items-center justify-center px-4">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-white">Iniciar sesion</h1>
-          <p className="text-slate-400 mt-2">Asistente Curricular PR</p>
+          <p className="text-xs font-semibold text-navy-mid uppercase tracking-widest mb-3">DEPR · Puerto Rico</p>
+          <h1 className="font-display text-3xl font-semibold text-ink">Iniciar sesión</h1>
+          <p className="text-navy-mid mt-2">Asistente Curricular PR</p>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm text-slate-300 mb-1">Correo electronico</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-              placeholder="maestro@escuela.pr"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-slate-300 mb-1">Contrasena</label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-              placeholder="..."
-            />
-          </div>
-          {error && <p className="text-red-400 text-sm">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 rounded-lg font-semibold text-white transition-colors"
-          >
-            {loading ? 'Entrando...' : 'Entrar'}
-          </button>
-        </form>
+        <div className="bg-white border border-navy-tint rounded-2xl p-6 space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-ink mb-1.5">Correo electrónico</label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                className="w-full px-4 py-2.5 bg-paper border border-navy-tint rounded-xl text-ink placeholder-ink/30 focus:outline-none focus:border-navy transition-colors"
+                placeholder="maestro@escuela.pr"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-ink mb-1.5">Contraseña</label>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                className="w-full px-4 py-2.5 bg-paper border border-navy-tint rounded-xl text-ink placeholder-ink/30 focus:outline-none focus:border-navy transition-colors"
+                placeholder="••••••••"
+              />
+            </div>
+            {error && <p className="text-clay text-sm">{error}</p>}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 bg-navy hover:bg-navy-mid disabled:opacity-50 rounded-xl font-semibold text-white transition-colors"
+            >
+              {loading ? 'Entrando...' : 'Entrar'}
+            </button>
+          </form>
+        </div>
         <div className="space-y-2 text-center">
-          <p className="text-slate-400 text-sm">
-            <Link href="/forgot-password" className="text-blue-400 hover:underline">
-              Olvidaste tu contrasena?
+          <p className="text-navy-mid text-sm">
+            <Link href="/forgot-password" className="text-navy hover:text-navy-mid underline">
+              ¿Olvidaste tu contraseña?
             </Link>
           </p>
-          <p className="text-slate-400 text-sm">
-            No tienes cuenta?{' '}
-            <Link href="/register" className="text-blue-400 hover:underline">
-              Registrate gratis
+          <p className="text-navy-mid text-sm">
+            ¿No tienes cuenta?{' '}
+            <Link href="/register" className="text-navy font-semibold hover:text-navy-mid">
+              Regístrate gratis
             </Link>
           </p>
         </div>

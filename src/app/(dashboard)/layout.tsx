@@ -28,26 +28,26 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <LanguageProvider>
-      <div className="min-h-screen bg-slate-950 text-white flex flex-col">
-        <nav className="border-b border-slate-800 px-4 py-2.5 flex items-center justify-between shrink-0 z-10">
+      <div className="min-h-screen bg-paper text-ink flex flex-col">
+        <nav className="bg-navy border-b border-navy-deep/50 px-4 py-2.5 flex items-center justify-between shrink-0 z-10">
           <div className="flex items-center gap-2">
-            <Link href="/dashboard" className="font-bold text-sm text-blue-400 shrink-0 mr-2 hidden sm:block">
+            <Link href="/dashboard" className="font-display font-semibold text-sm text-gold shrink-0 mr-2 hidden sm:block tracking-wide">
               Asistente Curricular PR
             </Link>
             <NavLinks />
           </div>
           <div className="flex items-center gap-2">
             <LanguageToggle />
-            <span className="text-slate-600 text-xs hidden lg:block truncate max-w-[140px]">{user.email}</span>
+            <span className="text-white/30 text-xs hidden lg:block truncate max-w-[140px]">{user.email}</span>
             <form action={signOut}>
-              <button type="submit" className="text-xs text-slate-400 hover:text-white transition-colors px-2 py-1.5 rounded-lg hover:bg-slate-800">
+              <button type="submit" className="text-xs text-white/60 hover:text-white transition-colors px-2 py-1.5 rounded-lg hover:bg-white/10">
                 Salir
               </button>
             </form>
           </div>
         </nav>
         <div className="flex flex-1 overflow-hidden">
-          <main className="flex-1 overflow-y-auto px-6 py-8">
+          <main className="flex-1 overflow-y-auto px-6 py-8 bg-paper">
             <div className="max-w-3xl mx-auto">
               {children}
             </div>

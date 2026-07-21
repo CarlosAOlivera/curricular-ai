@@ -1,26 +1,26 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* ── Paleta DEPR ─────────────────────────────────────────────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-sans:    var(--font-geist-sans);
+  --font-mono:    var(--font-geist-mono);
+  --font-display: var(--font-fraunces);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-navy:       #1C2854;
+  --color-navy-deep:  #0F1730;
+  --color-navy-mid:   #3A4A82;
+  --color-navy-tint:  #E7E9F2;
+  --color-gold:       #E5BD44;
+  --color-gold-deep:  #B8912A;
+  --color-gold-tint:  #F8ECC9;
+  --color-teal:       #1F6F5C;
+  --color-teal-deep:  #123F34;
+  --color-clay:       #C6543B;
+  --color-paper:      #FAF8F3;
+  --color-ink:        #14182A;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #FAF8F3;
+  color: #14182A;
 }
