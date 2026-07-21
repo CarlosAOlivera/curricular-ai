@@ -78,15 +78,16 @@ function PlanEntry({ plan, onDelete }: { plan: LessonPlan; onDelete: (id: string
         <div className="mt-3 pt-3 border-t border-navy-tint">
           {parsed ? (
             <div>
-              <div className="mb-3 flex justify-end">
+              <style>{`@media print { body * { visibility: hidden; } #plan-print-area, #plan-print-area * { visibility: visible; } #plan-print-area { position: absolute; top: 0; left: 0; width: 100%; padding: 8px; } .no-print { display: none !important; } @page { margin: 1cm; } }`}</style>
+              <div className="mb-3 flex justify-end no-print">
                 <button
                   onClick={() => window.print()}
-                  className="px-3 py-1.5 bg-green-700 hover:bg-green-600 rounded text-xs font-medium transition-colors"
+                  className="px-3 py-1.5 bg-teal hover:bg-teal-deep text-white rounded text-xs font-medium transition-colors"
                 >
                   {t('history.printPlan')}
                 </button>
               </div>
-              <div className="bg-white rounded-xl overflow-hidden">
+              <div id="plan-print-area" className="bg-white rounded-xl overflow-hidden">
                 <WeeklyPlanTable plan={parsed} />
               </div>
             </div>

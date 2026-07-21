@@ -60,8 +60,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
             {/* ── Footer ── */}
             <footer className="mt-12 pt-6 border-t border-navy-tint text-center">
               <p className="text-xs text-navy-mid/40">
-                Built by{' '}
-                <span className="font-semibold text-navy-mid/60">LevelUp Labs</span>
+                © 2026–2027 Built by{' '}
+                <span className="font-semibold text-gold">LevelUp Labs</span>
               </p>
             </footer>
           </main>
