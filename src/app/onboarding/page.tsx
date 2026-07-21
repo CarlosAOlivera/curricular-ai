@@ -132,7 +132,7 @@ export default function OnboardingPage() {
         {/* Header */}
         <div className="text-center">
           <p className="text-navy-mid font-semibold text-sm tracking-widest uppercase mb-2">
-            LumIA
+            LumIA Labs
           </p>
           <h1 className="font-display text-3xl font-semibold text-ink">Completa tu perfil</h1>
           <p className="text-navy-mid mt-2 text-sm">

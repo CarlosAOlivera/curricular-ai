@@ -160,7 +160,7 @@ export function generateICS(): string {
   const lines: string[] = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//LumIA//DEPR Calendar 2026-27//ES',
+    'PRODID:-//LumIA Labs//DEPR Calendar 2026-27//ES',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     'X-WR-CALNAME:DEPR Calendario Escolar 2026-2027',

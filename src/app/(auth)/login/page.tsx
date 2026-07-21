@@ -33,7 +33,7 @@ export default function LoginPage() {
           <p className="text-xs font-semibold text-navy-mid uppercase tracking-widest mb-3">DEPR · Puerto Rico</p>
           <h1 className="font-display text-3xl font-semibold text-ink">Iniciar sesión</h1>
           <p className="font-display font-semibold mt-2">
-            <span className="text-navy">Lum</span><span className="text-gold-deep">IA</span>
+            <span className="text-navy">Lum</span><span className="text-gold-deep">IA</span><span className="text-navy/50"> Labs</span>
           </p>
         </div>
         <div className="bg-white border border-navy-tint rounded-2xl p-6 space-y-4">

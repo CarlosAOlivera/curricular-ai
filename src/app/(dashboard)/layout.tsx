@@ -36,7 +36,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <nav className="fixed top-0 inset-x-0 bg-navy border-b border-navy-deep/50 px-4 py-2.5 flex items-center justify-between z-30">
           <div className="flex items-center gap-2">
             <Link href="/dashboard" className="font-display font-semibold text-sm shrink-0 mr-2 hidden sm:block tracking-wide">
-              <span className="text-white">Lum</span><span className="text-gold">IA</span>
+              <span className="text-white">Lum</span><span className="text-gold">IA</span><span className="text-white/60"> Labs</span>
             </Link>
             <NavLinks />
           </div>

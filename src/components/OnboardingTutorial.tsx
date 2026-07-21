@@ -6,7 +6,7 @@ const STEPS = [
   {
     emoji: '👋',
     iconBg: 'bg-navy',
-    title: '¡Bienvenido/a a LumIA!',
+    title: '¡Bienvenido/a a LumIA Labs!',
     desc: 'Tu plataforma de planificación curricular alineada al DEPR. En unos pasos te mostramos todo lo que puedes hacer.',
     cta: null,
   },

@@ -174,7 +174,7 @@ export default function PlannerPage() {
     doc.setTextColor(255, 255, 255)
     doc.setFontSize(13)
     doc.setFont('helvetica', 'bold')
-    doc.text('LumIA', margin, 8)
+    doc.text('LumIA Labs', margin, 8)
 
     doc.setFontSize(9)
     doc.setFont('helvetica', 'normal')

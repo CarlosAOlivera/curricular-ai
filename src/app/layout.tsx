@@ -12,7 +12,7 @@ const fraunces = Fraunces({
 })
 
 export const metadata: Metadata = {
-  title: 'LumIA — La inteligencia que ilumina tu enseñanza.',
+  title: 'LumIA Labs — La inteligencia que ilumina tu enseñanza.',
   description: 'Planificaciones semanales, rúbricas y assessments alineados al currículo del DEPR, listos en 60 segundos.',
 }
 
