@@ -29,7 +29,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <LanguageProvider>
       <div className="min-h-screen bg-paper text-ink flex flex-col">
-        <nav className="bg-navy border-b border-navy-deep/50 px-4 py-2.5 flex items-center justify-between shrink-0 z-10">
+        {/* ── Nav — fixed so it stays on scroll ── */}
+        <nav className="fixed top-0 inset-x-0 bg-navy border-b border-navy-deep/50 px-4 py-2.5 flex items-center justify-between z-30">
           <div className="flex items-center gap-2">
             <Link href="/dashboard" className="font-display font-semibold text-sm text-gold shrink-0 mr-2 hidden sm:block tracking-wide">
               Asistente Curricular PR
@@ -46,15 +47,26 @@ export default async function DashboardLayout({ children }: { children: React.Re
             </form>
           </div>
         </nav>
+
+        {/* Spacer to offset fixed nav (~41px) */}
+        <div className="h-[41px] shrink-0" />
+
         {/* On mobile: flex-col (content → calendar below). On lg+: flex-row side-by-side. */}
         <div className="flex flex-1 flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
           <main className="px-4 py-5 sm:px-6 sm:py-8 bg-paper lg:flex-1 lg:overflow-y-auto">
             <div className="max-w-3xl mx-auto">
               {children}
             </div>
+            {/* ── Footer ── */}
+            <footer className="mt-12 pt-6 border-t border-navy-tint text-center">
+              <p className="text-xs text-navy-mid/40">
+                Built by{' '}
+                <span className="font-semibold text-navy-mid/60">LevelUp Labs</span>
+              </p>
+            </footer>
           </main>
           {/* Mobile: fixed-height panel below content. Desktop: sticky sidebar. */}
-          <aside className="shrink-0 h-80 border-t border-navy-tint lg:border-t-0 lg:w-72 lg:h-[calc(100vh-49px)] lg:overflow-y-auto lg:sticky lg:top-0 lg:flex lg:flex-col">
+          <aside className="shrink-0 h-80 border-t border-navy-tint lg:border-t-0 lg:w-72 lg:h-[calc(100vh-41px)] lg:overflow-y-auto lg:sticky lg:top-[41px] lg:flex lg:flex-col">
             <CalendarPanel />
           </aside>
         </div>
