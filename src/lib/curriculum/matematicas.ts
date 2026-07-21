@@ -48,4 +48,46 @@ export const matematicasCurriculum: CurriculumGrade[] = [
       },
     ],
   },
+  {
+    grade: '11',
+    label: 'Grado 11 — Matemáticas (Trigonometría)',
+    units: [
+      {
+        id: 'TR.1',
+        name: 'Unidad TR.1 – Los ángulos y sus medidas',
+        weeks: [1, 2, 3, 4, 5],
+        standards: ['ES.N.2.1', 'ES.N.2.2', 'ES.F.33.1', 'ES.F.33.2', 'ES.F.33.3', 'ES.F.33.7', 'ES.G.49.1'],
+      },
+      {
+        id: 'TR.2',
+        name: 'Unidad TR.2 – Trigonometría en el triángulo rectángulo',
+        weeks: [6, 7, 8, 9, 10, 11],
+        standards: ['ES.F.33.1', 'ES.F.33.4', 'ES.F.33.5', 'ES.F.33.7', 'ES.G.48.1', 'ES.G.48.2', 'ES.G.48.3'],
+      },
+      {
+        id: 'TR.3',
+        name: 'Unidad TR.3 – Gráficas de funciones trigonométricas',
+        weeks: [12, 13, 14, 15, 16, 17],
+        standards: ['ES.G.37.1', 'ES.F.29.3', 'ES.F.29.4', 'ES.F.29.5', 'ES.F.29.6', 'ES.F.33.6', 'ES.F.34.1', 'ES.F.34.2'],
+      },
+      {
+        id: 'TR.4',
+        name: 'Unidad TR.4 – Identidades trigonométricas',
+        weeks: [21, 22, 23, 24, 25],
+        standards: ['ES.G.48.2', 'ES.G.48.4', 'ES.F.35.1', 'ES.F.35.2'],
+      },
+      {
+        id: 'TR.5',
+        name: 'Unidad TR.5 – Resolver ecuaciones trigonométricas',
+        weeks: [26, 27, 28, 29, 30, 31, 32, 33, 34, 35],
+        standards: ['ES.F.29.4', 'ES.F.34.1', 'ES.F.34.2', 'ES.F.35.1', 'ES.F.35.2', 'ES.G.48.3', 'ES.G.50.1', 'ES.G.50.2'],
+      },
+      {
+        id: 'TR.6',
+        name: 'Unidad TR.6 – Inversas de funciones trigonométricas',
+        weeks: [36, 37, 38],
+        standards: ['ES.G.48.3', 'ES.F.31.5', 'ES.F.34.3', 'ES.F.34.4'],
+      },
+    ],
+  },
 ]
