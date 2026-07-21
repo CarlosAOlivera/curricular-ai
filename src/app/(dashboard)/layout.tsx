@@ -4,6 +4,8 @@ import Link from 'next/link'
 import CalendarPanel from '@/components/CalendarPanel'
 import LanguageToggle from '@/components/LanguageToggle'
 import NavLinks from '@/components/NavLinks'
+import OnboardingTutorial from '@/components/OnboardingTutorial'
+import RestartTutorialButton from '@/components/RestartTutorialButton'
 import { LanguageProvider } from '@/contexts/LanguageContext'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -28,6 +30,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <LanguageProvider>
+      <OnboardingTutorial />
       <div className="min-h-screen bg-paper text-ink flex flex-col">
         {/* ── Nav — fixed so it stays on scroll ── */}
         <nav className="fixed top-0 inset-x-0 bg-navy border-b border-navy-deep/50 px-4 py-2.5 flex items-center justify-between z-30">
@@ -58,11 +61,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
               {children}
             </div>
             {/* ── Footer ── */}
-            <footer className="mt-12 pt-6 border-t border-navy-tint text-center">
+            <footer className="mt-12 pt-6 border-t border-navy-tint text-center space-y-1.5">
               <p className="text-xs text-navy-mid/40">
                 © 2026–2027 Built by{' '}
                 <span className="font-semibold text-gold">LevelUp Labs</span>
               </p>
+              <RestartTutorialButton />
             </footer>
           </main>
           {/* Mobile: fixed-height panel below content. Desktop: sticky sidebar. */}
