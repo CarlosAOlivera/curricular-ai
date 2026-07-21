@@ -471,17 +471,11 @@ export default function PlannerPage() {
                     : <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd"/></svg>}
                   Word / Google Docs
                 </button>
-                <button onClick={downloadPptx} disabled={exportingPptx}
-                  className="px-4 py-2 bg-orange-600 hover:bg-orange-500 disabled:opacity-50 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
-                  {exportingPptx
-                    ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    : <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/></svg>}
-                  PowerPoint
-                </button>
+                {/* PowerPoint temporarily disabled */}
               </>
             ) : (
               <div className="flex items-center gap-1.5 px-3 py-2 bg-amber-950/40 border border-amber-800/40 rounded-lg text-xs text-amber-400">
-                <span>🔒</span> Word · PPT <span className="text-amber-600 ml-1">Premium</span>
+                <span>🔒</span> Word / Google Docs <span className="text-amber-600 ml-1">Premium</span>
               </div>
             )}
 

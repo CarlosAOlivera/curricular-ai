@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import {
-  Document, Paragraph, TextRun, Table, TableRow, TableCell,
+  Document, Paragraph, TextRun, ImageRun, Table, TableRow, TableCell,
   Packer, AlignmentType, WidthType, ShadingType,
-  BorderStyle, VerticalAlign,
+  BorderStyle, VerticalAlign, Footer,
 } from 'docx'
 import { WeeklyPlanData } from '@/types'
+import fs from 'fs'
+import path from 'path'
 
 // ── Colors ──────────────────────────────────────────────────────────────────
 const C_BLUE_HEADER = '4472C4'
@@ -238,17 +240,63 @@ export async function POST(req: NextRequest) {
   const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as const
   const days = dayKeys.map(k => plan.days[k])
 
-  // ── Header ────────────────────────────────────────────────────────────────
+  // ── Logo ──────────────────────────────────────────────────────────────────
+  let logoBuffer: Buffer | null = null
+  try {
+    const logoPath = path.join(process.cwd(), 'public', 'depr-logo.png')
+    logoBuffer = fs.readFileSync(logoPath)
+  } catch { /* logo not found — skip */ }
+
+  // ── Header (logo left, title right) ───────────────────────────────────────
+  const noBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' }
+  const noBorders = { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder }
+
+  // Logo: original 326×115px, rendered at 64px height → width = 64*(326/115) ≈ 181px
+  const LOGO_H = 64
+  const LOGO_W = Math.round(LOGO_H * (326 / 115))  // 181
+
+  const logoCell = new TableCell({
+    width: { size: 2600, type: WidthType.DXA },   // ~1.8 in — fits 181px image + padding
+    borders: noBorders,
+    verticalAlign: VerticalAlign.CENTER,
+    margins: { top: 0, bottom: 0, left: 0, right: 120 },
+    children: [new Paragraph({
+      children: logoBuffer ? [new ImageRun({
+        data: logoBuffer,
+        transformation: { width: LOGO_W, height: LOGO_H },
+        type: 'png',
+      })] : [],
+    })],
+  })
+
+  const titleCell = new TableCell({
+    borders: noBorders,
+    verticalAlign: VerticalAlign.CENTER,
+    margins: { top: 0, bottom: 0, left: 120, right: 0 },
+    children: [
+      new Paragraph({
+        children: [new TextRun({ text: `${plan.subject} ${plan.grade} | ${T.weeklyPlan}`, bold: true, size: 28, color: '1F3864' })],
+        spacing: { before: 0, after: 40 },
+      }),
+      new Paragraph({
+        children: [new TextRun({ text: T.transversalNote, italics: true, size: SZ_SM, color: '666666' })],
+        spacing: { before: 0, after: 0 },
+      }),
+    ],
+  })
+
+  const headerTable = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    borders: { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder, insideH: noBorder, insideV: noBorder },
+    rows: [new TableRow({ children: [logoCell, titleCell] })],
+  })
+
   const headerParas = [
+    headerTable,
     new Paragraph({
-      children: [new TextRun({ text: `${plan.subject} ${plan.grade} | ${T.weeklyPlan}`, bold: true, size: 28, color: '1F3864' })],
-      alignment: AlignmentType.CENTER,
-      spacing: { before: 0, after: 60 },
-    }),
-    new Paragraph({
-      children: [new TextRun({ text: T.transversalNote, italics: true, size: SZ_SM, color: '666666' })],
-      alignment: AlignmentType.CENTER,
-      spacing: { before: 0, after: 120 },
+      children: [new TextRun({ text: '', size: 4 })],
+      border: { bottom: { style: BorderStyle.SINGLE, size: 12, color: '4472C4' } },
+      spacing: { before: 80, after: 120 },
     }),
     new Paragraph({
       children: [new TextRun({ text: `${T.week} ${plan.weekCode}`, bold: true, size: SZ })],
@@ -411,16 +459,19 @@ export async function POST(req: NextRequest) {
           margin: { top: 720, bottom: 720, left: 900, right: 900 },
         },
       },
+      footers: {
+        default: new Footer({
+          children: [new Paragraph({
+            alignment: AlignmentType.RIGHT,
+            children: [new TextRun({ text: 'Generado por Asistente Curricular PR', italics: true, size: 16, color: '999999' })],
+          })],
+        }),
+      },
       children: [
         ...headerParas,
         infoTable,
         new Paragraph({ children: [], spacing: { before: 120, after: 0 } }),
         mainTable,
-        new Paragraph({
-          children: [new TextRun({ text: 'Generado por Asistente Curricular PR', italics: true, size: 16, color: '999999' })],
-          alignment: AlignmentType.RIGHT,
-          spacing: { before: 120, after: 0 },
-        }),
       ],
     }],
   })
