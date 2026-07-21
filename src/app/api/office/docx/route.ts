@@ -287,7 +287,7 @@ export async function POST(req: NextRequest) {
 
   const headerTable = new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
-    borders: { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder, insideH: noBorder, insideV: noBorder },
+    borders: { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder, insideHorizontal: noBorder, insideVertical: noBorder },
     rows: [new TableRow({ children: [logoCell, titleCell] })],
   })
 

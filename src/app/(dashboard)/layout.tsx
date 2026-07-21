@@ -46,13 +46,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
             </form>
           </div>
         </nav>
-        <div className="flex flex-1 overflow-hidden">
-          <main className="flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-8 bg-paper">
+        {/* On mobile: flex-col (content → calendar below). On lg+: flex-row side-by-side. */}
+        <div className="flex flex-1 flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
+          <main className="px-4 py-5 sm:px-6 sm:py-8 bg-paper lg:flex-1 lg:overflow-y-auto">
             <div className="max-w-3xl mx-auto">
               {children}
             </div>
           </main>
-          <aside className="w-72 shrink-0 overflow-y-auto hidden lg:flex flex-col sticky top-0 h-[calc(100vh-49px)]">
+          {/* Mobile: fixed-height panel below content. Desktop: sticky sidebar. */}
+          <aside className="shrink-0 h-80 border-t border-navy-tint lg:border-t-0 lg:w-72 lg:h-[calc(100vh-49px)] lg:overflow-y-auto lg:sticky lg:top-0 lg:flex lg:flex-col">
             <CalendarPanel />
           </aside>
         </div>

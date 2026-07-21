@@ -70,8 +70,8 @@ export default function DashboardPage() {
       <div>
         <p className="text-[10px] text-navy-mid/50 uppercase tracking-widest font-semibold mb-2">{t('dashboard.quickActions')}</p>
         <div className="grid grid-cols-2 gap-3">
-          {/* Planificador — hero card, spans full row on very small screens */}
-          <Link href="/planner" className="col-span-2 sm:col-span-1 block rounded-xl p-4 bg-navy border border-navy hover:bg-navy-mid transition-all hover:scale-[1.01] hover:shadow-sm">
+          {/* Planificador — hero card spans full row always */}
+          <Link href="/planner" className="col-span-2 block rounded-xl p-4 bg-navy border border-navy hover:bg-navy-mid transition-all hover:scale-[1.01] hover:shadow-sm">
             <h3 className="font-display font-semibold text-base text-white">{t('dashboard.createPlan')}</h3>
             <p className="text-white/70 text-xs mt-1 leading-snug">{t('dashboard.createPlanDesc')}</p>
           </Link>

@@ -114,7 +114,7 @@ export default function CalendarPanel() {
   const googleUrl = `https://calendar.google.com/calendar/r/settings/addbyurl?url=${encodeURIComponent(icsUrl)}`
 
   return (
-    <div className="flex flex-col h-full bg-white border-l border-navy-tint select-none">
+    <div className="flex flex-col h-full bg-white border-l border-navy-tint lg:border-l select-none">
 
       {/* ── HEADER: title + sync + task input ── */}
       <div className="px-3 pt-3 pb-2.5 border-b border-navy-tint shrink-0 space-y-2">

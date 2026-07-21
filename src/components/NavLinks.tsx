@@ -38,7 +38,7 @@ export default function NavLinks() {
   return (
     <>
       {/* ── Desktop: horizontal links ── */}
-      <div className="hidden sm:flex gap-0.5">
+      <div className="hidden lg:flex gap-0.5">
         {links.map(link => (
           <Link
             key={link.href}
@@ -59,7 +59,7 @@ export default function NavLinks() {
 
       {/* ── Mobile: hamburger ── */}
       <button
-        className="sm:hidden p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+        className="lg:hidden p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
         onClick={() => setOpen(v => !v)}
         aria-label="Menú"
       >
@@ -85,7 +85,7 @@ export default function NavLinks() {
             onClick={() => setOpen(false)}
           />
           {/* Menu panel */}
-          <div className="fixed left-0 right-0 top-[41px] z-50 bg-navy border-b border-navy-deep/60 shadow-lg sm:hidden">
+          <div className="fixed left-0 right-0 top-[41px] z-50 bg-navy border-b border-navy-deep/60 shadow-lg lg:hidden">
             <div className="flex flex-col py-1">
               {links.map(link => (
                 <Link
