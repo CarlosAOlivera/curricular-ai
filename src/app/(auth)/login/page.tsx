@@ -32,7 +32,9 @@ export default function LoginPage() {
         <div className="text-center">
           <p className="text-xs font-semibold text-navy-mid uppercase tracking-widest mb-3">DEPR · Puerto Rico</p>
           <h1 className="font-display text-3xl font-semibold text-ink">Iniciar sesión</h1>
-          <p className="text-navy-mid mt-2">Asistente Curricular PR</p>
+          <p className="font-display font-semibold mt-2">
+            <span className="text-navy">Lum</span><span className="text-gold-deep">IA</span>
+          </p>
         </div>
         <div className="bg-white border border-navy-tint rounded-2xl p-6 space-y-4">
           <form onSubmit={handleSubmit} className="space-y-4">

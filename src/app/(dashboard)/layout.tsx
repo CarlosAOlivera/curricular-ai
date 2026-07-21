@@ -35,8 +35,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
         {/* ── Nav — fixed so it stays on scroll ── */}
         <nav className="fixed top-0 inset-x-0 bg-navy border-b border-navy-deep/50 px-4 py-2.5 flex items-center justify-between z-30">
           <div className="flex items-center gap-2">
-            <Link href="/dashboard" className="font-display font-semibold text-sm text-gold shrink-0 mr-2 hidden sm:block tracking-wide">
-              Asistente Curricular PR
+            <Link href="/dashboard" className="font-display font-semibold text-sm shrink-0 mr-2 hidden sm:block tracking-wide">
+              <span className="text-white">Lum</span><span className="text-gold">IA</span>
             </Link>
             <NavLinks />
           </div>

@@ -52,8 +52,8 @@ export default function LandingPage() {
       {/* ── NAV ── */}
       <nav className="fixed top-0 inset-x-0 z-50 bg-navy/95 backdrop-blur-sm border-b border-navy-deep/50 px-4 py-2.5">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <span className="font-display font-semibold text-gold text-sm tracking-wide">
-            Asistente Curricular PR
+          <span className="font-display font-semibold text-sm tracking-wide">
+            <span className="text-white">Lum</span><span className="text-gold">IA</span>
           </span>
           <div className="flex items-center gap-2">
             <Link href="/login" className="text-white/60 hover:text-white text-xs px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors">
@@ -74,7 +74,7 @@ export default function LandingPage() {
 
         <div className="relative max-w-3xl mx-auto space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-tint border border-gold/30 text-gold-deep text-xs font-semibold">
-            ✦ Diseñado para maestros de Puerto Rico
+            ✦ LumIA — Diseñado para maestros de Puerto Rico
           </div>
 
           <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-semibold text-ink leading-tight">
@@ -304,7 +304,10 @@ export default function LandingPage() {
 
       {/* ── FOOTER ── */}
       <footer className="bg-navy-deep px-4 py-8 text-center space-y-2">
-        <p className="font-display text-gold text-sm font-semibold">Asistente Curricular PR</p>
+        <p className="font-display text-sm font-semibold">
+          <span className="text-white">Lum</span><span className="text-gold">IA</span>
+        </p>
+        <p className="text-white/40 text-xs italic">La inteligencia que ilumina tu enseñanza.</p>
         <p className="text-white/30 text-xs">© 2026–2027 Built by <span className="text-gold/70 font-semibold">LevelUp Labs</span></p>
         <div className="flex justify-center gap-4 text-xs text-white/20 pt-1">
           <a href="/login" className="hover:text-white/50 transition-colors">Iniciar sesión</a>

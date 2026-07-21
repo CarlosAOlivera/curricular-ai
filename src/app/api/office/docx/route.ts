@@ -463,7 +463,7 @@ export async function POST(req: NextRequest) {
         default: new Footer({
           children: [new Paragraph({
             alignment: AlignmentType.RIGHT,
-            children: [new TextRun({ text: 'Generado por Asistente Curricular PR', italics: true, size: 16, color: '999999' })],
+            children: [new TextRun({ text: 'Generado por LumIA', italics: true, size: 16, color: '999999' })],
           })],
         }),
       },

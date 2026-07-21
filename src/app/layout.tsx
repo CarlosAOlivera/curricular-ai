@@ -12,8 +12,8 @@ const fraunces = Fraunces({
 })
 
 export const metadata: Metadata = {
-  title: 'Asistente Curricular PR',
-  description: 'Planificaciones educativas alineadas al currículo del DEPR',
+  title: 'LumIA — La inteligencia que ilumina tu enseñanza.',
+  description: 'Planificaciones semanales, rúbricas y assessments alineados al currículo del DEPR, listos en 60 segundos.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
