@@ -56,7 +56,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
         {/* On mobile: flex-col (content → calendar below). On lg+: flex-row side-by-side. */}
         <div className="flex flex-1 flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
-          <main className="px-4 py-5 sm:px-6 sm:py-8 bg-paper lg:flex-1 lg:overflow-y-auto">
+          <main className="px-4 py-5 pb-10 sm:px-6 sm:py-8 sm:pb-12 bg-paper lg:flex-1 lg:overflow-y-auto">
             <div className="max-w-3xl mx-auto">
               {children}
             </div>
