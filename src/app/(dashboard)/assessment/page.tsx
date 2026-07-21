@@ -17,9 +17,9 @@ function isPremiumActive(t: string | null, role: string) {
 function LoadingSpinner() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
-      <div className="w-12 h-12 border-4 border-violet-500 border-t-transparent rounded-full animate-spin" />
-      <p className="text-slate-300 text-lg">Generando assessment...</p>
-      <p className="text-slate-500 text-sm">Esto puede tomar 1-2 minutos</p>
+      <div className="w-12 h-12 border-4 border-navy border-t-transparent rounded-full animate-spin" />
+      <p className="text-ink text-lg">Generando assessment...</p>
+      <p className="text-navy-mid text-sm">Esto puede tomar 1-2 minutos</p>
     </div>
   )
 }
@@ -99,35 +99,35 @@ export default function AssessmentPage() {
   if (!loading && !isPremium) {
     return (
       <div className="max-w-lg mx-auto pt-16 text-center space-y-6">
-        <div className="w-16 h-16 rounded-2xl bg-violet-900/40 border border-violet-700/40 flex items-center justify-center mx-auto text-3xl">
+        <div className="w-16 h-16 rounded-2xl bg-gold-tint border border-gold/40 flex items-center justify-center mx-auto text-3xl">
           📝
         </div>
-        <h1 className="text-2xl font-bold text-white">{t('assessment.title')}</h1>
-        <p className="text-slate-400">Crea pruebas cortas cubiertas por semana. Funcion Premium.</p>
-        <div className="bg-slate-900 border border-violet-700/40 rounded-2xl p-6 space-y-4">
+        <h1 className="font-display text-2xl font-semibold text-ink">{t('assessment.title')}</h1>
+        <p className="text-navy-mid">Crea pruebas cortas cubiertas por semana. Funcion Premium.</p>
+        <div className="bg-white border border-gold/40 rounded-2xl p-6 space-y-4">
           {!trialEndsAt ? (
             <>
-              <p className="text-white font-semibold">Prueba Premium gratis por 7 dias</p>
-              <p className="text-slate-400 text-sm">Sin tarjeta de credito. Accede a Assessment, Rubrica y Planilla de Especificaciones.</p>
+              <p className="text-ink font-semibold">Prueba Premium gratis por 7 dias</p>
+              <p className="text-navy-mid text-sm">Sin tarjeta de credito. Accede a Assessment, Rubrica y Planilla de Especificaciones.</p>
               <button
                 onClick={handleActivateTrial}
                 disabled={activatingTrial}
-                className="w-full py-3 bg-violet-600 hover:bg-violet-500 disabled:opacity-50 rounded-xl font-semibold text-white transition-colors"
+                className="w-full py-3 bg-navy hover:bg-navy-mid disabled:opacity-50 rounded-xl font-semibold text-white transition-colors"
               >
                 {activatingTrial ? 'Activando...' : 'Activar trial gratis'}
               </button>
             </>
           ) : (
             <>
-              <p className="text-white font-semibold">Tu periodo de prueba ha terminado</p>
-              <p className="text-slate-400 text-sm">Suscribete a Premium para seguir usando esta funcion.</p>
-              <button className="w-full py-3 bg-violet-600 hover:bg-violet-500 rounded-xl font-semibold text-white transition-colors">
+              <p className="text-ink font-semibold">Tu periodo de prueba ha terminado</p>
+              <p className="text-navy-mid text-sm">Suscribete a Premium para seguir usando esta funcion.</p>
+              <button className="w-full py-3 bg-navy hover:bg-navy-mid rounded-xl font-semibold text-white transition-colors">
                 Ver planes Premium
               </button>
             </>
           )}
         </div>
-        {error && <p className="text-red-400 text-sm">{error}</p>}
+        {error && <p className="text-clay text-sm">{error}</p>}
       </div>
     )
   }
@@ -141,21 +141,21 @@ export default function AssessmentPage() {
       <div className="space-y-6">
         <div className="no-print flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-white">Assessment generado</h1>
-            <p className="text-slate-400 text-sm mt-1">
+            <h1 className="font-display text-2xl font-semibold text-ink">Assessment generado</h1>
+            <p className="text-navy-mid text-sm mt-1">
               {selectedPlans.length} {selectedPlans.length !== 1 ? t('common.selected_many') : t('common.selected_one')} &bull; {assessments.length} {assessments.length !== 1 ? t('assessment.versions') : t('assessment.version')}
             </p>
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => { setStep('select'); setAssessments([]); setSelectedIds(new Set()) }}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm text-slate-300 transition-colors"
+              className="px-4 py-2 bg-navy-tint hover:bg-navy-mid/20 rounded-lg text-sm text-ink transition-colors"
             >
               Nuevo assessment
             </button>
             <button
               onClick={() => window.print()}
-              className="px-4 py-2 bg-violet-600 hover:bg-violet-500 rounded-lg text-sm text-white font-semibold transition-colors"
+              className="px-4 py-2 bg-navy hover:bg-navy-mid rounded-lg text-sm text-white font-semibold transition-colors"
             >
               Imprimir
             </button>
@@ -170,19 +170,19 @@ export default function AssessmentPage() {
                 onClick={() => setActiveVersion(i)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   activeVersion === i
-                    ? 'bg-violet-600 text-white'
-                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                    ? 'bg-navy text-white'
+                    : 'bg-navy-tint text-ink hover:bg-navy-mid/20'
                 }`}
               >
                 Version {i + 1}
               </button>
             ))}
-            <label className="flex items-center gap-2 ml-4 text-sm text-slate-400 cursor-pointer">
+            <label className="flex items-center gap-2 ml-4 text-sm text-navy-mid cursor-pointer">
               <input
                 type="checkbox"
                 checked={showAnswers}
                 onChange={e => setShowAnswers(e.target.checked)}
-                className="accent-violet-500"
+                className="accent-navy"
               />
               Mostrar respuestas
             </label>
@@ -191,12 +191,12 @@ export default function AssessmentPage() {
 
         {assessments.length === 1 && (
           <div className="no-print">
-            <label className="flex items-center gap-2 text-sm text-slate-400 cursor-pointer">
+            <label className="flex items-center gap-2 text-sm text-navy-mid cursor-pointer">
               <input
                 type="checkbox"
                 checked={showAnswers}
                 onChange={e => setShowAnswers(e.target.checked)}
-                className="accent-violet-500"
+                className="accent-navy"
               />
               Mostrar clave de respuestas
             </label>
@@ -215,26 +215,26 @@ export default function AssessmentPage() {
         <div>
           <button
             onClick={() => setStep('select')}
-            className="text-slate-400 hover:text-white text-sm mb-4 flex items-center gap-1 transition-colors"
+            className="text-navy-mid hover:text-ink text-sm mb-4 flex items-center gap-1 transition-colors"
           >
             ← Cambiar seleccion
           </button>
-          <h1 className="text-2xl font-bold text-white">Opciones del assessment</h1>
+          <h1 className="font-display text-2xl font-semibold text-ink">Opciones del assessment</h1>
         </div>
 
         {/* Selected weeks summary */}
-        <div className="bg-slate-900 rounded-xl p-4 space-y-2">
-          <p className="text-slate-400 text-xs font-medium uppercase tracking-wide mb-3">
+        <div className="bg-white border border-navy-tint rounded-xl p-4 space-y-2">
+          <p className="text-navy-mid/50 text-xs font-medium uppercase tracking-wide mb-3">
             Semanas seleccionadas ({selectedPlans.length})
           </p>
           {selectedPlans.map(p => (
             <div key={p.id} className="flex items-center gap-3 text-sm">
-              <span className="w-6 h-6 rounded-full bg-violet-900/60 border border-violet-700/40 flex items-center justify-center text-violet-400 text-xs font-bold shrink-0">
+              <span className="w-6 h-6 rounded-full bg-navy-tint border border-navy/20 flex items-center justify-center text-navy text-xs font-bold shrink-0">
                 {p.week}
               </span>
-              <span className="text-white">{p.subject}</span>
-              <span className="text-slate-500">{p.unit}</span>
-              <span className="text-slate-600 ml-auto">{p.grade}</span>
+              <span className="text-ink">{p.subject}</span>
+              <span className="text-navy-mid">{p.unit}</span>
+              <span className="text-navy-mid/50 ml-auto">{p.grade}</span>
             </div>
           ))}
         </div>
@@ -242,8 +242,8 @@ export default function AssessmentPage() {
         {/* Versions selector */}
         <div className="space-y-3">
           <div>
-            <p className="text-white font-semibold">Numero de versiones</p>
-            <p className="text-slate-500 text-sm mt-0.5">
+            <p className="text-ink font-semibold">Numero de versiones</p>
+            <p className="text-navy-mid text-sm mt-0.5">
               Genera versiones diferentes del mismo assessment para prevenir copia entre estudiantes.
             </p>
           </div>
@@ -254,17 +254,17 @@ export default function AssessmentPage() {
                 onClick={() => setVersions(v)}
                 className={`py-4 rounded-xl border text-center transition-all ${
                   versions === v
-                    ? 'bg-violet-900/40 border-violet-500 text-white'
-                    : 'bg-slate-900 border-slate-700 text-slate-400 hover:border-slate-500'
+                    ? 'bg-navy/10 border-navy text-ink'
+                    : 'bg-white border-navy-tint text-ink hover:border-navy-mid/40'
                 }`}
               >
                 <div className="text-2xl font-bold">{v}</div>
-                <div className="text-xs mt-1">{v === 1 ? t('assessment.version') : t('assessment.versions')}</div>
+                <div className="text-xs mt-1 text-navy-mid">{v === 1 ? t('assessment.version') : t('assessment.versions')}</div>
               </button>
             ))}
           </div>
           {versions > 1 && (
-            <p className="text-slate-500 text-xs">
+            <p className="text-navy-mid/50 text-xs">
               {t('assessment.versionsNote').replace('{n}', String(versions))}
             </p>
           )}
@@ -276,19 +276,19 @@ export default function AssessmentPage() {
             type="checkbox"
             checked={showAnswers}
             onChange={e => setShowAnswers(e.target.checked)}
-            className="w-4 h-4 accent-violet-500"
+            className="w-4 h-4 accent-navy"
           />
           <div>
-            <p className="text-white text-sm group-hover:text-violet-300 transition-colors">Incluir clave de respuestas</p>
-            <p className="text-slate-500 text-xs">Para uso del maestro. No se muestra al imprimir la version del estudiante.</p>
+            <p className="text-ink text-sm group-hover:text-navy transition-colors">Incluir clave de respuestas</p>
+            <p className="text-navy-mid/50 text-xs">Para uso del maestro. No se muestra al imprimir la version del estudiante.</p>
           </div>
         </label>
 
-        {error && <p className="text-red-400 text-sm">{error}</p>}
+        {error && <p className="text-clay text-sm">{error}</p>}
 
         <button
           onClick={handleGenerate}
-          className="w-full py-3 bg-violet-600 hover:bg-violet-500 rounded-xl font-semibold text-white transition-colors"
+          className="w-full py-3 bg-navy hover:bg-navy-mid rounded-xl font-semibold text-white transition-colors"
         >
           {t('assessment.generateBtn')}{versions > 1 ? ` (${versions} ${t('assessment.versions')})` : ''}
         </button>
@@ -300,18 +300,18 @@ export default function AssessmentPage() {
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-bold text-white">{t('assessment.title')}</h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <h1 className="font-display text-2xl font-semibold text-ink">{t('assessment.title')}</h1>
+        <p className="text-navy-mid text-sm mt-1">
           {t('assessment.subtitle')}
         </p>
       </div>
 
       {loading ? (
-        <div className="text-slate-500 text-sm">Cargando planes...</div>
+        <div className="text-navy-mid text-sm">Cargando planes...</div>
       ) : plans.length === 0 ? (
-        <div className="bg-slate-900 rounded-xl p-8 text-center">
-          <p className="text-slate-400">No tienes planes generados aun.</p>
-          <p className="text-slate-500 text-sm mt-2">Genera un plan semanal primero desde el Planificador.</p>
+        <div className="bg-white border border-navy-tint rounded-xl p-8 text-center">
+          <p className="text-ink">No tienes planes generados aun.</p>
+          <p className="text-navy-mid text-sm mt-2">Genera un plan semanal primero desde el Planificador.</p>
         </div>
       ) : (
         <>
@@ -324,12 +324,12 @@ export default function AssessmentPage() {
                   onClick={() => togglePlan(plan.id)}
                   className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl border text-left transition-all ${
                     selected
-                      ? 'bg-violet-900/30 border-violet-500 text-white'
-                      : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-600'
+                      ? 'bg-navy/10 border-navy text-ink'
+                      : 'bg-white border-navy-tint text-ink hover:border-navy-mid/40'
                   }`}
                 >
                   <div className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${
-                    selected ? 'bg-violet-600 border-violet-600' : 'border-slate-600'
+                    selected ? 'bg-navy border-navy' : 'border-navy-tint'
                   }`}>
                     {selected && (
                       <svg viewBox="0 0 10 8" className="w-3 h-3 text-white fill-none stroke-current stroke-2">
@@ -339,12 +339,12 @@ export default function AssessmentPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-violet-400">Semana {plan.week}</span>
-                      <span className="text-slate-600 text-xs">&bull;</span>
-                      <span className="text-xs text-slate-500">{plan.grade}</span>
+                      <span className="text-xs font-semibold text-navy">Semana {plan.week}</span>
+                      <span className="text-navy-tint text-xs">&bull;</span>
+                      <span className="text-xs text-navy-mid/50">{plan.grade}</span>
                     </div>
                     <p className="text-sm font-medium truncate mt-0.5">{plan.subject}</p>
-                    <p className="text-xs text-slate-500 truncate">{plan.unit}</p>
+                    <p className="text-xs text-navy-mid/50 truncate">{plan.unit}</p>
                   </div>
                 </button>
               )
@@ -352,7 +352,7 @@ export default function AssessmentPage() {
           </div>
 
           <div className="flex items-center justify-between pt-2">
-            <p className="text-slate-500 text-sm">
+            <p className="text-navy-mid text-sm">
               {selectedIds.size === 0
                 ? t('common.noneSelected')
                 : `${selectedIds.size} ${selectedIds.size !== 1 ? t('common.selected_many') : t('common.selected_one')}`}
@@ -360,7 +360,7 @@ export default function AssessmentPage() {
             <button
               onClick={() => setStep('options')}
               disabled={selectedIds.size === 0}
-              className="px-6 py-2.5 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl text-sm font-semibold text-white transition-colors"
+              className="px-6 py-2.5 bg-navy hover:bg-navy-mid disabled:opacity-40 disabled:cursor-not-allowed rounded-xl text-sm font-semibold text-white transition-colors"
             >
               {t('common.continue')}
             </button>

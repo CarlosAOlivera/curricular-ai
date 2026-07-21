@@ -483,9 +483,9 @@ Responde SOLO con un JSON con esta estructura exacta:
 
   if (step === 'generating') return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
-      <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
-      <p className="text-slate-300 text-lg">Generando planificación DE Leer...</p>
-      <p className="text-slate-500 text-sm">Esto puede tomar unos segundos</p>
+      <div className="w-12 h-12 border-4 border-teal border-t-transparent rounded-full animate-spin" />
+      <p className="text-ink text-lg">Generando planificación DE Leer...</p>
+      <p className="text-navy-mid text-sm">Esto puede tomar unos segundos</p>
     </div>
   )
 
@@ -493,41 +493,41 @@ Responde SOLO con un JSON con esta estructura exacta:
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Planificación DE Leer — Anejo 1</h1>
-          <p className="text-slate-400 text-sm mt-1">Grado {grade} · {date} · {monthData?.name}</p>
+          <h1 className="font-display text-2xl font-semibold text-ink">Planificación DE Leer — Anejo 1</h1>
+          <p className="text-navy-mid text-sm mt-1">Grado {grade} · {date} · {monthData?.name}</p>
         </div>
         <div className="flex gap-3">
-          <button onClick={downloadAnejoOficial} className="px-4 py-2 bg-green-700 hover:bg-green-600 rounded-lg text-sm font-semibold transition-colors">
+          <button onClick={downloadAnejoOficial} className="px-4 py-2 bg-teal hover:bg-teal-deep text-white rounded-lg text-sm font-semibold transition-colors">
             Anejo 1 Oficial (director)
           </button>
-          <button onClick={downloadPDF} className="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-sm font-semibold transition-colors">
+          <button onClick={downloadPDF} className="px-4 py-2 bg-teal/80 hover:bg-teal text-white rounded-lg text-sm font-semibold transition-colors">
             Planificación completa
           </button>
-          <button onClick={handleReset} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm font-semibold transition-colors">
+          <button onClick={handleReset} className="px-4 py-2 bg-navy-tint hover:bg-navy-mid/20 text-ink rounded-lg text-sm font-semibold transition-colors">
             Nueva planificación
           </button>
         </div>
       </div>
 
       {/* Lema */}
-      <div className="bg-green-900/20 border border-green-800 rounded-xl p-4">
-        <p className="text-green-400 text-xs uppercase tracking-wide font-medium mb-1">Lema del mes — {monthData?.name}</p>
-        <p className="text-white italic">"{monthData?.lema}"</p>
+      <div className="bg-teal/10 border border-teal/30 rounded-xl p-4">
+        <p className="text-teal text-xs uppercase tracking-wide font-medium mb-1">Lema del mes — {monthData?.name}</p>
+        <p className="text-ink italic">"{monthData?.lema}"</p>
       </div>
 
       {/* Lectura */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3">
+      <div className="bg-white border border-navy-tint rounded-xl p-5 space-y-3">
         <div>
-          <p className="text-xs text-slate-500 uppercase tracking-wide">Lectura recomendada</p>
-          <p className="text-white font-semibold text-lg mt-0.5">{plan.titulo_lectura}</p>
-          <p className="text-slate-400 text-sm">{plan.tipo_texto} · Nivel de comprensión: {plan.nivel_comprension}</p>
+          <p className="text-xs text-navy-mid/50 uppercase tracking-wide">Lectura recomendada</p>
+          <p className="text-ink font-semibold text-lg mt-0.5">{plan.titulo_lectura}</p>
+          <p className="text-navy-mid text-sm">{plan.tipo_texto} · Nivel de comprensión: {plan.nivel_comprension}</p>
         </div>
-        <p className="text-slate-300 text-sm">{plan.resumen}</p>
+        <p className="text-ink/80 text-sm">{plan.resumen}</p>
         <div>
-          <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">Vocabulario clave</p>
+          <p className="text-xs text-navy-mid/50 uppercase tracking-wide mb-1">Vocabulario clave</p>
           <div className="flex flex-wrap gap-2">
             {plan.vocabulario.map(v => (
-              <span key={v} className="px-2 py-0.5 bg-slate-800 rounded text-sm text-slate-300">{v}</span>
+              <span key={v} className="px-2 py-0.5 bg-navy-tint rounded text-sm text-navy-mid">{v}</span>
             ))}
           </div>
         </div>
@@ -535,13 +535,13 @@ Responde SOLO con un JSON con esta estructura exacta:
 
       {/* Stages */}
       {[
-        { label: 'Prelectura', sublabel: 'Antes de la lectura', text: plan.prelectura, color: 'blue' },
-        { label: 'Durante la lectura', sublabel: '', text: plan.durante, color: 'violet' },
-        { label: 'Poslectura', sublabel: 'Evaluación de comprensión', text: plan.poslectura, color: 'amber' },
+        { label: 'Prelectura', sublabel: 'Antes de la lectura', text: plan.prelectura, cls: 'text-navy' },
+        { label: 'Durante la lectura', sublabel: '', text: plan.durante, cls: 'text-teal' },
+        { label: 'Poslectura', sublabel: 'Evaluación de comprensión', text: plan.poslectura, cls: 'text-gold-deep' },
       ].map(s => (
-        <div key={s.label} className="bg-slate-900 border border-slate-800 rounded-xl p-5">
-          <p className={`text-xs uppercase tracking-wide font-medium mb-1 text-${s.color}-400`}>{s.label}{s.sublabel ? ` — ${s.sublabel}` : ''}</p>
-          <p className="text-slate-200 leading-relaxed">{s.text}</p>
+        <div key={s.label} className="bg-white border border-navy-tint rounded-xl p-5">
+          <p className={`text-xs uppercase tracking-wide font-medium mb-1 ${s.cls}`}>{s.label}{s.sublabel ? ` — ${s.sublabel}` : ''}</p>
+          <p className="text-ink/80 leading-relaxed">{s.text}</p>
         </div>
       ))}
     </div>
@@ -550,73 +550,73 @@ Responde SOLO con un JSON con esta estructura exacta:
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">Proyecto DE Leer</h1>
-        <p className="text-slate-400 mt-1">Genera la planificación del miércoles de lectura — Anejo 1</p>
+        <h1 className="font-display text-3xl font-semibold text-ink">Proyecto DE Leer</h1>
+        <p className="text-navy-mid mt-1">Genera la planificación del miércoles de lectura — Anejo 1</p>
       </div>
 
       <form onSubmit={handleGenerate} className="space-y-6">
         {/* Teacher info */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Maestro/a</label>
+            <label className="block text-sm font-medium text-ink mb-1.5">Maestro/a</label>
             <input type="text" value={teacherName} onChange={e => setTeacherName(e.target.value)}
               placeholder="Prof. Nombre Apellido"
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-green-500 transition-colors" />
+              className="w-full bg-white border border-navy-tint rounded-xl px-4 py-3 text-ink placeholder-ink/30 focus:outline-none focus:border-teal transition-colors" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Escuela</label>
+            <label className="block text-sm font-medium text-ink mb-1.5">Escuela</label>
             <input type="text" value={school} onChange={e => setSchool(e.target.value)}
               placeholder="Nombre de la escuela"
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-green-500 transition-colors" />
+              className="w-full bg-white border border-navy-tint rounded-xl px-4 py-3 text-ink placeholder-ink/30 focus:outline-none focus:border-teal transition-colors" />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">ORE de <span className="text-slate-600 text-xs">(opcional)</span></label>
+            <label className="block text-sm font-medium text-ink mb-1.5">ORE de <span className="text-navy-mid/40 text-xs">(opcional)</span></label>
             <input type="text" value={ore} onChange={e => setOre(e.target.value)}
               placeholder="Nombre de la ORE"
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-green-500 transition-colors" />
+              className="w-full bg-white border border-navy-tint rounded-xl px-4 py-3 text-ink placeholder-ink/30 focus:outline-none focus:border-teal transition-colors" />
           </div>
           <div />
         </div>
 
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Grado</label>
+            <label className="block text-sm font-medium text-ink mb-1.5">Grado</label>
             <select value={grade} onChange={e => setGrade(e.target.value)} required
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500 transition-colors">
+              className="w-full bg-white border border-navy-tint rounded-xl px-4 py-3 text-ink focus:outline-none focus:border-teal transition-colors">
               <option value="">Selecciona</option>
               {GRADES.map(g => <option key={g} value={g}>Grado {g}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Grupo / Sección</label>
+            <label className="block text-sm font-medium text-ink mb-1.5">Grupo / Sección</label>
             <input type="text" value={group} onChange={e => setGroup(e.target.value)}
               placeholder="Ej: A, B, 901..."
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-green-500 transition-colors" />
+              className="w-full bg-white border border-navy-tint rounded-xl px-4 py-3 text-ink placeholder-ink/30 focus:outline-none focus:border-teal transition-colors" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Fecha (miércoles)</label>
+            <label className="block text-sm font-medium text-ink mb-1.5">Fecha (miércoles)</label>
             <input type="date" value={date} onChange={e => setDate(e.target.value)} required
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500 transition-colors" />
+              className="w-full bg-white border border-navy-tint rounded-xl px-4 py-3 text-ink focus:outline-none focus:border-teal transition-colors" />
           </div>
         </div>
 
         {/* Month theme auto-loaded */}
         {monthData && (
-          <div className="bg-green-900/20 border border-green-800 rounded-xl p-4 space-y-3">
-            <p className="text-green-400 text-xs uppercase tracking-wide font-medium">Mes de {monthData.name} — Tema del mes</p>
-            <p className="text-white italic text-sm">"{monthData.lema}"</p>
+          <div className="bg-teal/10 border border-teal/30 rounded-xl p-4 space-y-3">
+            <p className="text-teal text-xs uppercase tracking-wide font-medium">Mes de {monthData.name} — Tema del mes</p>
+            <p className="text-ink italic text-sm">"{monthData.lema}"</p>
             <div>
-              <p className="text-slate-400 text-xs mb-2">Selecciona el tema de la sesión:</p>
+              <p className="text-navy-mid/60 text-xs mb-2">Selecciona el tema de la sesión:</p>
               <div className="flex flex-wrap gap-2">
                 {monthData.temas.map(t => (
                   <button key={t} type="button" onClick={() => setSelectedTema(t)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
                       selectedTema === t
-                        ? 'bg-green-600 border-green-500 text-white'
-                        : 'bg-slate-900 border-slate-700 text-slate-300 hover:border-green-600'
+                        ? 'bg-teal border-teal-deep text-white'
+                        : 'bg-white border-navy-tint text-ink hover:border-teal'
                     }`}>{t}</button>
                 ))}
               </div>
@@ -627,27 +627,27 @@ Responde SOLO con un JSON con esta estructura exacta:
         {/* Activity type */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Tipo de actividad <span className="text-slate-600 text-xs">(opcional)</span></label>
+            <label className="block text-sm font-medium text-ink mb-1.5">Tipo de actividad <span className="text-navy-mid/40 text-xs">(opcional)</span></label>
             <select value={activityType} onChange={e => setActivityType(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500 transition-colors">
+              className="w-full bg-white border border-navy-tint rounded-xl px-4 py-3 text-ink focus:outline-none focus:border-teal transition-colors">
               <option value="">La IA elige la más apropiada</option>
               {DE_LEER_ACTIVITIES.map(a => <option key={a.id} value={a.id}>{a.label}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Evaluación de comprensión <span className="text-slate-600 text-xs">(opcional)</span></label>
+            <label className="block text-sm font-medium text-ink mb-1.5">Evaluación de comprensión <span className="text-navy-mid/40 text-xs">(opcional)</span></label>
             <select value={evaluationType} onChange={e => setEvaluationType(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500 transition-colors">
+              className="w-full bg-white border border-navy-tint rounded-xl px-4 py-3 text-ink focus:outline-none focus:border-teal transition-colors">
               <option value="">La IA elige la más apropiada</option>
               {DE_LEER_EVALUATIONS.map(a => <option key={a.id} value={a.id}>{a.label}</option>)}
             </select>
           </div>
         </div>
 
-        {error && <p className="text-red-400 text-sm">{error}</p>}
+        {error && <p className="text-clay text-sm">{error}</p>}
 
         <button type="submit" disabled={!grade || !date || !monthData}
-          className="w-full py-4 bg-green-600 hover:bg-green-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-semibold text-lg transition-colors">
+          className="w-full py-4 bg-teal hover:bg-teal-deep disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-semibold text-lg text-white transition-colors">
           Generar Planificación DE Leer
         </button>
       </form>

@@ -13,13 +13,13 @@ export interface DEPREvent {
 }
 
 export const EVENT_COLORS: Record<EventType, { bg: string; text: string; dot: string; label: string }> = {
-  holiday:    { bg: 'bg-red-900/60',    text: 'text-red-300',    dot: 'bg-red-500',    label: 'Día festivo'        },
-  assessment: { bg: 'bg-amber-900/60',  text: 'text-amber-300',  dot: 'bg-amber-500',  label: 'Assessment'         },
-  school:     { bg: 'bg-green-900/60',  text: 'text-green-300',  dot: 'bg-green-500',  label: 'Calendario escolar' },
-  recess:     { bg: 'bg-purple-900/60', text: 'text-purple-300', dot: 'bg-purple-500', label: 'Receso académico'   },
-  finals:     { bg: 'bg-orange-900/60', text: 'text-orange-300', dot: 'bg-orange-500', label: 'Evaluaciones finales'},
-  report:     { bg: 'bg-blue-900/60',   text: 'text-blue-300',   dot: 'bg-blue-500',   label: 'Informe de progreso'},
-  special:    { bg: 'bg-slate-800',     text: 'text-slate-300',  dot: 'bg-slate-400',  label: 'Evento especial'   },
+  holiday:    { bg: 'bg-red-50',      text: 'text-red-700',      dot: 'bg-red-500',    label: 'Día festivo'        },
+  assessment: { bg: 'bg-amber-50',    text: 'text-amber-700',    dot: 'bg-amber-500',  label: 'Assessment'         },
+  school:     { bg: 'bg-emerald-50',  text: 'text-emerald-700',  dot: 'bg-emerald-500',label: 'Calendario escolar' },
+  recess:     { bg: 'bg-purple-50',   text: 'text-purple-700',   dot: 'bg-purple-500', label: 'Receso académico'   },
+  finals:     { bg: 'bg-orange-50',   text: 'text-orange-700',   dot: 'bg-orange-500', label: 'Evaluaciones finales'},
+  report:     { bg: 'bg-blue-50',     text: 'text-blue-700',     dot: 'bg-blue-500',   label: 'Informe de progreso'},
+  special:    { bg: 'bg-navy-tint',   text: 'text-navy-mid',     dot: 'bg-navy-mid',   label: 'Evento especial'   },
 }
 
 export const DEPR_EVENTS: DEPREvent[] = [

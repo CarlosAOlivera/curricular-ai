@@ -190,8 +190,8 @@ export default function CalendarPanel() {
         </div>
       </div>
 
-      {/* ── BODY: calendar views (scrollable) ── */}
-      <div className="flex-1 overflow-y-auto">
+      {/* ── BODY: calendar views + tasks (scrollable) ── */}
+      <div className="flex-1 overflow-y-auto min-h-0">
 
         {/* MONTH VIEW */}
         {view === 'month' && (
@@ -288,14 +288,14 @@ export default function CalendarPanel() {
                 {selectedEvents.map(ev => {
                   const c = EVENT_COLORS[ev.type]
                   return (
-                    <div key={ev.id} className={`rounded-xl p-3 ${c.bg} border border-white/5`}>
+                    <div key={ev.id} className={`rounded-xl p-3 ${c.bg} border border-black/5`}>
                       <div className="flex items-center gap-2 mb-1">
                         <span className={`w-1.5 h-1.5 rounded-full ${c.dot} shrink-0`} />
                         <span className={`text-[10px] font-semibold uppercase tracking-wide ${c.text}`}>{c.label}</span>
                       </div>
                       <p className={`text-xs leading-snug ${c.text}`}>{ev.title}</p>
                       {ev.endDate && ev.endDate !== ev.date && (
-                        <p className="text-[10px] text-slate-500 mt-1">{t('calendar.until')} {ev.endDate}</p>
+                        <p className="text-[10px] text-navy-mid/50 mt-1">{t('calendar.until')} {ev.endDate}</p>
                       )}
                     </div>
                   )
@@ -320,31 +320,31 @@ export default function CalendarPanel() {
             </div>
           </div>
         )}
-      </div>
 
-      {/* ── TASK LIST — below calendar ── */}
-      {tasks.length > 0 && (
-        <div className="border-t border-navy-tint shrink-0">
-          <div className="px-3 pt-2 pb-1 flex items-center gap-1">
-            <span className="text-[10px] font-semibold text-navy-mid/60 uppercase tracking-wider">
-              {lang === "en" ? "Tasks" : "Tareas"}
-            </span>
-            <span className="text-[10px] text-ink/30">({tasks.filter(t=>!t.done).length}/{tasks.length})</span>
+        {/* ── TASK LIST — inside scroll area, right after calendar ── */}
+        {tasks.length > 0 && (
+          <div className="border-t border-navy-tint mt-1">
+            <div className="px-3 pt-2 pb-1 flex items-center gap-1">
+              <span className="text-[10px] font-semibold text-navy-mid/60 uppercase tracking-wider">
+                {lang === "en" ? "Tasks" : "Tareas"}
+              </span>
+              <span className="text-[10px] text-ink/30">({tasks.filter(t=>!t.done).length}/{tasks.length})</span>
+            </div>
+            <div className="px-2 space-y-0.5 pb-3">
+              {tasks.map(task => (
+                <div key={task.id} className="flex items-start gap-1.5 group px-1 py-1 rounded hover:bg-navy-tint/40">
+                  <button onClick={() => toggleTask(task.id)}
+                    className={"mt-0.5 w-3.5 h-3.5 rounded border shrink-0 flex items-center justify-center transition-colors " + (task.done ? "bg-navy border-navy" : "border-navy-tint hover:border-navy")}>
+                    {task.done && <svg viewBox="0 0 12 12" className="w-2 h-2 text-white"><path d="M2 6l3 3 5-5" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                  </button>
+                  <span className={"text-xs flex-1 leading-snug " + (task.done ? "line-through text-ink/25" : "text-ink")}>{task.text}</span>
+                  <button onClick={() => deleteTask(task.id)} className="opacity-0 group-hover:opacity-100 text-ink/30 hover:text-clay transition-all text-xs shrink-0 leading-none">&times;</button>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="px-2 max-h-36 overflow-y-auto space-y-0.5 pb-2">
-            {tasks.map(task => (
-              <div key={task.id} className="flex items-start gap-1.5 group px-1 py-1 rounded hover:bg-navy-tint/40">
-                <button onClick={() => toggleTask(task.id)}
-                  className={"mt-0.5 w-3.5 h-3.5 rounded border shrink-0 flex items-center justify-center transition-colors " + (task.done ? "bg-navy border-navy" : "border-navy-tint hover:border-navy")}>
-                  {task.done && <svg viewBox="0 0 12 12" className="w-2 h-2 text-white"><path d="M2 6l3 3 5-5" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-                </button>
-                <span className={"text-xs flex-1 leading-snug " + (task.done ? "line-through text-ink/25" : "text-ink")}>{task.text}</span>
-                <button onClick={() => deleteTask(task.id)} className="opacity-0 group-hover:opacity-100 text-ink/30 hover:text-clay transition-all text-xs shrink-0 leading-none">&times;</button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }

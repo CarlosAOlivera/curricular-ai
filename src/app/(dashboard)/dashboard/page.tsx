@@ -30,35 +30,36 @@ export default function DashboardPage() {
   }, [])
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-4">
+      {/* Header */}
       <div>
-        <h1 className="font-display text-3xl font-semibold text-ink">
+        <h1 className="font-display text-2xl font-semibold text-ink">
           {name ? `${t('dashboard.welcome')}, ${name}` : t('dashboard.welcome')}
         </h1>
-        <p className="text-navy-mid mt-1">{t('dashboard.subtitle')}</p>
+        <p className="text-navy-mid text-sm mt-0.5">{t('dashboard.subtitle')}</p>
       </div>
 
-      {/* Stats */}
+      {/* Stats — compact strip */}
       <div>
-        <p className="text-xs text-navy-mid/50 uppercase tracking-widest font-semibold mb-4">{t('dashboard.stats')}</p>
+        <p className="text-[10px] text-navy-mid/50 uppercase tracking-widest font-semibold mb-2">{t('dashboard.stats')}</p>
         {loading ? (
-          <div className="grid grid-cols-3 gap-4">
-            {[1,2,3].map(i => <div key={i} className="bg-white border border-navy-tint rounded-2xl p-6 h-32 animate-pulse" />)}
+          <div className="grid grid-cols-3 gap-3">
+            {[1,2,3].map(i => <div key={i} className="bg-white border border-navy-tint rounded-xl p-3 h-20 animate-pulse" />)}
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-3">
             {[
               { key: 'dashboard.weeklyPlans', count: stats.plans,       href: '/history',    icon: '📋' },
               { key: 'dashboard.rubrics',     count: stats.rubrics,     href: '/rubrica',    icon: '📊' },
               { key: 'dashboard.assessments', count: stats.assessments, href: '/assessment', icon: '📝' },
             ].map(({ key, count, href, icon }) => (
-              <Link key={href} href={href} className="block bg-white border border-navy-tint hover:border-navy-mid/40 hover:shadow-sm rounded-2xl p-6 transition-all group">
-                <div className="flex items-start justify-between mb-4">
-                  <span className="text-3xl">{icon}</span>
-                  <span className="text-4xl font-bold text-navy group-hover:text-navy-mid transition-colors">{count}</span>
+              <Link key={href} href={href} className="block bg-white border border-navy-tint hover:border-navy-mid/40 hover:shadow-sm rounded-xl p-3 transition-all group">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xl">{icon}</span>
+                  <span className="text-2xl font-bold text-navy group-hover:text-navy-mid transition-colors">{count}</span>
                 </div>
-                <p className="text-ink font-medium">{t(key)}</p>
-                <p className="text-navy-mid/40 text-xs mt-1 group-hover:text-navy-mid transition-colors">{t('dashboard.go')}</p>
+                <p className="text-ink font-medium text-xs leading-snug">{t(key)}</p>
+                <p className="text-navy-mid/40 text-[10px] mt-0.5 group-hover:text-navy-mid transition-colors">{t('dashboard.go')} →</p>
               </Link>
             ))}
           </div>
@@ -67,20 +68,24 @@ export default function DashboardPage() {
 
       {/* Quick actions */}
       <div>
-        <p className="text-xs text-navy-mid/50 uppercase tracking-widest font-semibold mb-4">{t('dashboard.quickActions')}</p>
-        <div className="grid grid-cols-2 gap-4">
+        <p className="text-[10px] text-navy-mid/50 uppercase tracking-widest font-semibold mb-2">{t('dashboard.quickActions')}</p>
+        <div className="grid grid-cols-2 gap-3">
+          {/* Planificador — hero card, spans full row on very small screens */}
+          <Link href="/planner" className="col-span-2 sm:col-span-1 block rounded-xl p-4 bg-navy border border-navy hover:bg-navy-mid transition-all hover:scale-[1.01] hover:shadow-sm">
+            <h3 className="font-display font-semibold text-base text-white">{t('dashboard.createPlan')}</h3>
+            <p className="text-white/70 text-xs mt-1 leading-snug">{t('dashboard.createPlanDesc')}</p>
+          </Link>
+
+          {/* Premium cards */}
           {[
-            { titleKey: 'dashboard.createPlan',       descKey: 'dashboard.createPlanDesc',       href: '/planner',    badge: undefined, color: 'bg-navy border-navy hover:bg-navy-mid' },
-            { titleKey: 'dashboard.createRubric',     descKey: 'dashboard.createRubricDesc',     href: '/rubrica',    badge: 'Premium', color: 'bg-gold-tint border-gold/30 hover:border-gold/60' },
-            { titleKey: 'dashboard.createAssessment', descKey: 'dashboard.createAssessmentDesc', href: '/assessment', badge: 'Premium', color: 'bg-gold-tint border-gold/30 hover:border-gold/60' },
-            { titleKey: 'dashboard.createPlanilla',   descKey: 'dashboard.createPlanillaDesc',   href: '/planilla',   badge: 'Premium', color: 'bg-gold-tint border-gold/30 hover:border-gold/60' },
-          ].map(({ titleKey, descKey, href, badge, color }) => (
-            <Link key={href} href={href} className={`block rounded-2xl p-6 border transition-all hover:scale-[1.01] hover:shadow-sm ${color}`}>
-              {badge && (
-                <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full bg-gold/20 text-gold-deep mb-3">✦ {badge}</span>
-              )}
-              <h3 className={`font-display font-semibold text-lg ${badge ? 'text-ink' : 'text-white'}`}>{t(titleKey)}</h3>
-              <p className={`text-sm mt-1 ${badge ? 'text-ink/60' : 'text-white/70'}`}>{t(descKey)}</p>
+            { titleKey: 'dashboard.createRubric',     descKey: 'dashboard.createRubricDesc',     href: '/rubrica'    },
+            { titleKey: 'dashboard.createAssessment', descKey: 'dashboard.createAssessmentDesc', href: '/assessment' },
+            { titleKey: 'dashboard.createPlanilla',   descKey: 'dashboard.createPlanillaDesc',   href: '/planilla'   },
+          ].map(({ titleKey, descKey, href }) => (
+            <Link key={href} href={href} className="block rounded-xl p-4 bg-gold-tint border border-gold/30 hover:border-gold/60 transition-all hover:scale-[1.01] hover:shadow-sm">
+              <span className="inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-gold/20 text-gold-deep mb-2">✦ Premium</span>
+              <h3 className="font-display font-semibold text-sm text-ink">{t(titleKey)}</h3>
+              <p className="text-ink/60 text-xs mt-0.5 leading-snug">{t(descKey)}</p>
             </Link>
           ))}
         </div>

@@ -1,11 +1,14 @@
 @import "tailwindcss";
 
-/* ── Paleta DEPR ─────────────────────────────────────────────────── */
+/* ── Fuentes (inline porque referencian variables de next/font) ─── */
 @theme inline {
   --font-sans:    var(--font-geist-sans);
   --font-mono:    var(--font-geist-mono);
   --font-display: var(--font-fraunces);
+}
 
+/* ── Paleta DEPR (sin inline — genera las utility classes) ────────── */
+@theme {
   --color-navy:       #1C2854;
   --color-navy-deep:  #0F1730;
   --color-navy-mid:   #3A4A82;

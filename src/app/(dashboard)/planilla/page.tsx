@@ -30,9 +30,9 @@ function isPremiumActive(t: string | null, role: string) {
 function LoadingSpinner() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
-      <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin" />
-      <p className="text-slate-300 text-lg">Generando planilla y examen...</p>
-      <p className="text-slate-500 text-sm">Esto puede tomar 2-3 minutos</p>
+      <div className="w-12 h-12 border-4 border-gold border-t-transparent rounded-full animate-spin" />
+      <p className="text-ink text-lg">Generando planilla y examen...</p>
+      <p className="text-navy-mid text-sm">Esto puede tomar 2-3 minutos</p>
     </div>
   )
 }
@@ -114,34 +114,34 @@ export default function PlanillaPage() {
   if (!loading && !isPremium) {
     return (
       <div className="max-w-lg mx-auto pt-16 text-center space-y-6">
-        <div className="w-16 h-16 rounded-2xl bg-amber-900/40 border border-amber-700/40 flex items-center justify-center mx-auto text-3xl">
+        <div className="w-16 h-16 rounded-2xl bg-gold-tint border border-gold/40 flex items-center justify-center mx-auto text-3xl">
           📋
         </div>
-        <h1 className="text-2xl font-bold text-white">{t('planilla.title')}</h1>
-        <p className="text-slate-400">Crea examenes de unidad con tabla de especificaciones. Funcion Premium.</p>
-        <div className="bg-slate-900 border border-amber-700/40 rounded-2xl p-6 space-y-4">
+        <h1 className="font-display text-2xl font-semibold text-ink">{t('planilla.title')}</h1>
+        <p className="text-navy-mid">Crea examenes de unidad con tabla de especificaciones. Funcion Premium.</p>
+        <div className="bg-white border border-gold/40 rounded-2xl p-6 space-y-4">
           {!trialEndsAt ? (
             <>
-              <p className="text-white font-semibold">Prueba Premium gratis por 7 dias</p>
-              <p className="text-slate-400 text-sm">Sin tarjeta de credito. Accede a Planilla, Assessment, Rubrica y mas.</p>
+              <p className="text-ink font-semibold">Prueba Premium gratis por 7 dias</p>
+              <p className="text-navy-mid text-sm">Sin tarjeta de credito. Accede a Planilla, Assessment, Rubrica y mas.</p>
               <button
                 onClick={handleActivateTrial}
                 disabled={activatingTrial}
-                className="w-full py-3 bg-amber-600 hover:bg-amber-500 disabled:opacity-50 rounded-xl font-semibold text-white transition-colors"
+                className="w-full py-3 bg-navy hover:bg-navy-mid disabled:opacity-50 rounded-xl font-semibold text-white transition-colors"
               >
                 {activatingTrial ? 'Activando...' : 'Activar trial gratis'}
               </button>
             </>
           ) : (
             <>
-              <p className="text-white font-semibold">Tu periodo de prueba ha terminado</p>
-              <button className="w-full py-3 bg-amber-600 hover:bg-amber-500 rounded-xl font-semibold text-white transition-colors">
+              <p className="text-ink font-semibold">Tu periodo de prueba ha terminado</p>
+              <button className="w-full py-3 bg-navy hover:bg-navy-mid rounded-xl font-semibold text-white transition-colors">
                 Ver planes Premium
               </button>
             </>
           )}
         </div>
-        {error && <p className="text-red-400 text-sm">{error}</p>}
+        {error && <p className="text-clay text-sm">{error}</p>}
       </div>
     )
   }
@@ -154,21 +154,21 @@ export default function PlanillaPage() {
       <div className="space-y-6">
         <div className="no-print flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-white">{t('planilla.title')}</h1>
-            <p className="text-slate-400 text-sm mt-1">
+            <h1 className="font-display text-2xl font-semibold text-ink">{t('planilla.title')}</h1>
+            <p className="text-navy-mid text-sm mt-1">
               {selectedPlans.length} {selectedPlans.length !== 1 ? t('common.selected_many') : t('common.selected_one')} &bull; {planilla.totalItems} {t('common.week').toLowerCase()} &bull; {planilla.totalPoints} {t('planilla.points')}
             </p>
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => { setStep('select'); setPlanilla(null); setExam(null); setSelectedIds(new Set()) }}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm text-slate-300 transition-colors"
+              className="px-4 py-2 bg-navy-tint hover:bg-navy-mid/20 rounded-lg text-sm text-ink transition-colors"
             >
               Nueva planilla
             </button>
             <button
               onClick={() => window.print()}
-              className="px-4 py-2 bg-amber-600 hover:bg-amber-500 rounded-lg text-sm text-white font-semibold transition-colors"
+              className="px-4 py-2 bg-gold hover:bg-gold-deep rounded-lg text-sm text-ink font-semibold transition-colors"
             >
               Imprimir
             </button>
@@ -180,7 +180,7 @@ export default function PlanillaPage() {
           <button
             onClick={() => setActiveView('planilla')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeView === 'planilla' ? 'bg-amber-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+              activeView === 'planilla' ? 'bg-gold hover:bg-gold-deep text-ink' : 'bg-navy-tint text-ink hover:bg-navy-mid/20'
             }`}
           >
             📋 Planilla de especificaciones
@@ -188,18 +188,18 @@ export default function PlanillaPage() {
           <button
             onClick={() => setActiveView('exam')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeView === 'exam' ? 'bg-amber-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+              activeView === 'exam' ? 'bg-gold hover:bg-gold-deep text-ink' : 'bg-navy-tint text-ink hover:bg-navy-mid/20'
             }`}
           >
             📝 Examen de unidad
           </button>
           {activeView === 'exam' && (
-            <label className="flex items-center gap-2 ml-4 text-sm text-slate-400 cursor-pointer">
+            <label className="flex items-center gap-2 ml-4 text-sm text-navy-mid cursor-pointer">
               <input
                 type="checkbox"
                 checked={showAnswers}
                 onChange={e => setShowAnswers(e.target.checked)}
-                className="accent-amber-500"
+                className="accent-gold-deep"
               />
               Mostrar respuestas
             </label>
@@ -218,26 +218,26 @@ export default function PlanillaPage() {
         <div>
           <button
             onClick={() => setStep('select')}
-            className="text-slate-400 hover:text-white text-sm mb-4 flex items-center gap-1 transition-colors"
+            className="text-navy-mid hover:text-ink text-sm mb-4 flex items-center gap-1 transition-colors"
           >
             ← Cambiar seleccion
           </button>
-          <h1 className="text-2xl font-bold text-white">Opciones del examen</h1>
+          <h1 className="font-display text-2xl font-semibold text-ink">Opciones del examen</h1>
         </div>
 
         {/* Selected weeks */}
-        <div className="bg-slate-900 rounded-xl p-4 space-y-2">
-          <p className="text-slate-400 text-xs font-medium uppercase tracking-wide mb-3">
+        <div className="bg-white border border-navy-tint rounded-xl p-4 space-y-2">
+          <p className="text-navy-mid/50 text-xs font-medium uppercase tracking-wide mb-3">
             Semanas seleccionadas ({selectedPlans.length})
           </p>
           {selectedPlans.map(p => (
             <div key={p.id} className="flex items-center gap-3 text-sm">
-              <span className="w-6 h-6 rounded-full bg-amber-900/60 border border-amber-700/40 flex items-center justify-center text-amber-400 text-xs font-bold shrink-0">
+              <span className="w-6 h-6 rounded-full bg-gold-tint border border-gold/40 flex items-center justify-center text-gold-deep text-xs font-bold shrink-0">
                 {p.week}
               </span>
-              <span className="text-white">{p.subject}</span>
-              <span className="text-slate-500">{p.unit}</span>
-              <span className="text-slate-600 ml-auto">{p.grade}</span>
+              <span className="text-ink">{p.subject}</span>
+              <span className="text-navy-mid">{p.unit}</span>
+              <span className="text-navy-mid/50 ml-auto">{p.grade}</span>
             </div>
           ))}
         </div>
@@ -245,8 +245,8 @@ export default function PlanillaPage() {
         {/* Total points */}
         <div className="space-y-3">
           <div>
-            <p className="text-white font-semibold">Puntuacion total del examen</p>
-            <p className="text-slate-500 text-sm mt-0.5">El sistema distribuira los puntos automaticamente entre todos los reactivos.</p>
+            <p className="text-ink font-semibold">Puntuacion total del examen</p>
+            <p className="text-navy-mid text-sm mt-0.5">El sistema distribuira los puntos automaticamente entre todos los reactivos.</p>
           </div>
           <div className="grid grid-cols-4 gap-3">
             {[50, 75, 100, 150].map(pts => (
@@ -255,32 +255,32 @@ export default function PlanillaPage() {
                 onClick={() => setTotalPoints(pts)}
                 className={`py-3 rounded-xl border text-center transition-all ${
                   totalPoints === pts
-                    ? 'bg-amber-900/40 border-amber-500 text-white'
-                    : 'bg-slate-900 border-slate-700 text-slate-400 hover:border-slate-500'
+                    ? 'bg-gold-tint border-gold text-ink'
+                    : 'bg-white border-navy-tint text-ink hover:border-navy-mid/40'
                 }`}
               >
                 <div className="text-xl font-bold">{pts}</div>
-                <div className="text-xs mt-0.5">{t('planilla.points')}</div>
+                <div className="text-xs mt-0.5 text-navy-mid">{t('planilla.points')}</div>
               </button>
             ))}
           </div>
         </div>
 
         {/* What will be generated */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 space-y-2">
-          <p className="text-slate-300 text-sm font-medium">{t('planilla.willGenerate')}</p>
-          <div className="space-y-1.5 text-sm text-slate-500">
-            <div className="flex items-center gap-2"><span className="text-amber-400">✓</span> {t('planilla.item1')}</div>
-            <div className="flex items-center gap-2"><span className="text-amber-400">✓</span> {t('planilla.item2')}</div>
-            <div className="flex items-center gap-2"><span className="text-amber-400">✓</span> {t('planilla.item3')}</div>
+        <div className="bg-gold-tint border border-gold/30 rounded-xl p-4 space-y-2">
+          <p className="text-ink text-sm font-medium">{t('planilla.willGenerate')}</p>
+          <div className="space-y-1.5 text-sm text-navy-mid">
+            <div className="flex items-center gap-2"><span className="text-gold-deep">✓</span> {t('planilla.item1')}</div>
+            <div className="flex items-center gap-2"><span className="text-gold-deep">✓</span> {t('planilla.item2')}</div>
+            <div className="flex items-center gap-2"><span className="text-gold-deep">✓</span> {t('planilla.item3')}</div>
           </div>
         </div>
 
-        {error && <p className="text-red-400 text-sm">{error}</p>}
+        {error && <p className="text-clay text-sm">{error}</p>}
 
         <button
           onClick={handleGenerate}
-          className="w-full py-3 bg-amber-600 hover:bg-amber-500 rounded-xl font-semibold text-white transition-colors"
+          className="w-full py-3 bg-navy hover:bg-navy-mid rounded-xl font-semibold text-white transition-colors"
         >
           {t('planilla.generateBtn')}
         </button>
@@ -292,18 +292,18 @@ export default function PlanillaPage() {
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-bold text-white">{t('planilla.title')}</h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <h1 className="font-display text-2xl font-semibold text-ink">{t('planilla.title')}</h1>
+        <p className="text-navy-mid text-sm mt-1">
           {t('planilla.subtitle')}
         </p>
       </div>
 
       {loading ? (
-        <div className="text-slate-500 text-sm">Cargando planes...</div>
+        <div className="text-navy-mid text-sm">Cargando planes...</div>
       ) : plans.length === 0 ? (
-        <div className="bg-slate-900 rounded-xl p-8 text-center">
-          <p className="text-slate-400">No tienes planes generados aun.</p>
-          <p className="text-slate-500 text-sm mt-2">Genera un plan semanal primero desde el Planificador.</p>
+        <div className="bg-white border border-navy-tint rounded-xl p-8 text-center">
+          <p className="text-ink">No tienes planes generados aun.</p>
+          <p className="text-navy-mid text-sm mt-2">Genera un plan semanal primero desde el Planificador.</p>
         </div>
       ) : (
         <>
@@ -316,27 +316,27 @@ export default function PlanillaPage() {
                   onClick={() => togglePlan(plan.id)}
                   className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl border text-left transition-all ${
                     selected
-                      ? 'bg-amber-900/30 border-amber-500 text-white'
-                      : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-600'
+                      ? 'bg-gold-tint border-gold text-ink'
+                      : 'bg-white border-navy-tint text-ink hover:border-navy-mid/40'
                   }`}
                 >
                   <div className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${
-                    selected ? 'bg-amber-600 border-amber-600' : 'border-slate-600'
+                    selected ? 'bg-gold border-gold' : 'border-navy-tint'
                   }`}>
                     {selected && (
-                      <svg viewBox="0 0 10 8" className="w-3 h-3 text-white fill-none stroke-current stroke-2">
+                      <svg viewBox="0 0 10 8" className="w-3 h-3 text-ink fill-none stroke-current stroke-2">
                         <polyline points="1,4 4,7 9,1" />
                       </svg>
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-amber-400">Semana {plan.week}</span>
-                      <span className="text-slate-600 text-xs">&bull;</span>
-                      <span className="text-xs text-slate-500">{plan.grade}</span>
+                      <span className="text-xs font-semibold text-gold-deep">Semana {plan.week}</span>
+                      <span className="text-navy-tint text-xs">&bull;</span>
+                      <span className="text-xs text-navy-mid/50">{plan.grade}</span>
                     </div>
                     <p className="text-sm font-medium truncate mt-0.5">{plan.subject}</p>
-                    <p className="text-xs text-slate-500 truncate">{plan.unit}</p>
+                    <p className="text-xs text-navy-mid/50 truncate">{plan.unit}</p>
                   </div>
                 </button>
               )
@@ -344,7 +344,7 @@ export default function PlanillaPage() {
           </div>
 
           <div className="flex items-center justify-between pt-2">
-            <p className="text-slate-500 text-sm">
+            <p className="text-navy-mid text-sm">
               {selectedIds.size === 0
                 ? t('common.noneSelected')
                 : `${selectedIds.size} ${selectedIds.size !== 1 ? t('common.selected_many') : t('common.selected_one')} — ${selectedIds.size > 1 ? t('planilla.unitExamNote') : t('planilla.quizNote')}`}
@@ -352,7 +352,7 @@ export default function PlanillaPage() {
             <button
               onClick={() => setStep('options')}
               disabled={selectedIds.size === 0}
-              className="px-6 py-2.5 bg-amber-600 hover:bg-amber-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl text-sm font-semibold text-white transition-colors"
+              className="px-6 py-2.5 bg-navy hover:bg-navy-mid disabled:opacity-40 disabled:cursor-not-allowed rounded-xl text-sm font-semibold text-white transition-colors"
             >
               {t('common.continue')}
             </button>

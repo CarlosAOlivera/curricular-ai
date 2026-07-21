@@ -7,7 +7,6 @@ const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin']
 const fraunces = Fraunces({
   variable: '--font-fraunces',
   subsets: ['latin'],
-  weight: ['400', '600', '700'],
   style: ['normal', 'italic'],
   axes: ['opsz'],
 })
