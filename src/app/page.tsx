@@ -248,8 +248,8 @@ export default function LandingPage() {
               </div>
               <div>
                 <p className="text-xs font-semibold text-gold uppercase tracking-wide mb-1">Premium</p>
-                <p className="font-display text-3xl font-bold text-white">$7.99<span className="text-base font-normal text-white/50">/mes</span></p>
-                <p className="text-white/40 text-xs mt-1">7 días gratis, sin tarjeta</p>
+                <p className="font-display text-3xl font-bold text-white">$4.99<span className="text-base font-normal text-white/50">/mes</span></p>
+                <p className="text-white/40 text-xs mt-1">Plan anual · $7.99/mes mensual · 7 días gratis</p>
               </div>
               <ul className="space-y-2.5">
                 {['Todo lo del plan gratis', 'Rúbricas de evaluación', 'Assessments por semana', 'Planilla de Especificaciones', 'Exportación a Word'].map(f => (

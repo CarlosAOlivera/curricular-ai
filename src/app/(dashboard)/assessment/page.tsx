@@ -106,24 +106,31 @@ export default function AssessmentPage() {
         <div className="bg-white border border-gold/40 rounded-2xl p-6 space-y-4">
           {!trialEndsAt ? (
             <>
-              <p className="text-ink font-semibold">Prueba Premium gratis por 7 dias</p>
-              <p className="text-navy-mid text-sm">7 días gratis, luego $7.99/mes. Cancela cuando quieras.</p>
+              <p className="text-ink font-semibold">Prueba Premium gratis por 7 días</p>
+              <p className="text-navy-mid text-sm">7 días gratis, luego elige tu plan. Cancela cuando quieras.</p>
+              <button
+                onClick={async () => { setActivatingTrial(true); const res = await fetch('/api/stripe/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan: 'annual' }) }); const { url } = await res.json(); if (url) window.location.href = url; else setActivatingTrial(false) }}
+                disabled={activatingTrial}
+                className="w-full py-3 bg-gold hover:bg-gold-deep text-ink disabled:opacity-50 rounded-xl font-semibold transition-colors"
+              >
+                Anual — $59.99/año <span className="text-xs font-normal opacity-70">(ahorras $36)</span>
+              </button>
               <button
                 onClick={handleActivateTrial}
                 disabled={activatingTrial}
-                className="w-full py-3 bg-navy hover:bg-navy-mid disabled:opacity-50 rounded-xl font-semibold text-white transition-colors"
+                className="w-full py-3 bg-navy hover:bg-navy-mid text-white disabled:opacity-50 rounded-xl font-semibold transition-colors"
               >
-                {activatingTrial ? 'Activando...' : 'Activar trial gratis'}
+                Mensual — $7.99/mes
               </button>
             </>
           ) : (
             <>
               <p className="text-ink font-semibold">Tu periodo de prueba ha terminado</p>
-              <p className="text-navy-mid text-sm">Suscribete a Premium para seguir usando esta funcion.</p>
+              <p className="text-navy-mid text-sm">Suscríbete a Premium para seguir usando esta función.</p>
               <button
-                className="w-full py-3 bg-navy hover:bg-navy-mid rounded-xl font-semibold text-white transition-colors"
+                className="w-full py-3 bg-gold hover:bg-gold-deep text-ink rounded-xl font-semibold transition-colors"
                 onClick={async () => {
-                  const res = await fetch('/api/stripe/checkout', { method: 'POST' })
+                  const res = await fetch('/api/stripe/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan: 'monthly' }) })
                   const { url } = await res.json()
                   if (url) window.location.href = url
                 }}

@@ -158,15 +158,20 @@ export default function RubricaPage() {
         <p className="text-navy-mid mt-1">{t('rubrica.subtitle')}</p>
       </div>
 
-      {/* Premium banner */}
+      {/* Premium gate */}
       {!premiumActive && !trialEndsAt && (
-        <div className="bg-gold-tint border border-gold/40 rounded-xl p-4 flex items-center justify-between gap-4">
-          <div>
-            <p className="text-ink font-semibold text-sm">{t('rubrica.premiumFeatureTitle')}</p>
-            <p className="text-navy-mid text-xs mt-0.5">{t('rubrica.premiumFeatureDesc')}</p>
-          </div>
-          <button onClick={handleActivateTrial} disabled={activatingTrial} className="shrink-0 px-4 py-2 bg-navy hover:bg-navy-mid disabled:opacity-50 text-white rounded-lg text-sm font-semibold transition-colors whitespace-nowrap">
-            {activatingTrial ? t('common.activating') : t('common.activateTrial')}
+        <div className="bg-white border border-gold/40 rounded-2xl p-6 space-y-4 text-center">
+          <p className="text-ink font-semibold">Prueba Premium gratis por 7 días</p>
+          <p className="text-navy-mid text-sm">7 días gratis, luego elige tu plan. Cancela cuando quieras.</p>
+          <button
+            onClick={async () => { setActivatingTrial(true); const res = await fetch('/api/stripe/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan: 'annual' }) }); const { url } = await res.json(); if (url) window.location.href = url; else setActivatingTrial(false) }}
+            disabled={activatingTrial}
+            className="w-full py-3 bg-gold hover:bg-gold-deep text-ink disabled:opacity-50 rounded-xl font-semibold transition-colors"
+          >
+            Anual — $59.99/año <span className="text-xs font-normal opacity-70">(ahorras $36)</span>
+          </button>
+          <button onClick={handleActivateTrial} disabled={activatingTrial} className="w-full py-3 bg-navy hover:bg-navy-mid text-white disabled:opacity-50 rounded-xl font-semibold transition-colors">
+            Mensual — $7.99/mes
           </button>
         </div>
       )}
