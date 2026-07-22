@@ -156,7 +156,21 @@ export default function PlannerPage() {
 
   const downloadPDF = useCallback(() => {
     if (!plan) return
-    window.print()
+    const planDiv = document.getElementById('weekly-plan')
+    if (!planDiv) return
+
+    // Collect all page stylesheets
+    const styles = Array.from(document.styleSheets).map(sheet => {
+      try { return Array.from(sheet.cssRules).map(r => r.cssText).join('\n') }
+      catch { return '' }
+    }).join('\n')
+
+    const printWindow = window.open('', '_blank', 'width=1200,height=800')
+    if (!printWindow) return
+    printWindow.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Plan Semanal</title><style>${styles} body{background:white;margin:0;padding:16px;} @page{margin:1cm;size:landscape;}</style></head><body>${planDiv.innerHTML}</body></html>`)
+    printWindow.document.close()
+    printWindow.focus()
+    setTimeout(() => { printWindow.print(); printWindow.close() }, 600)
   }, [plan])
 
   const downloadDocx = useCallback(async () => {
@@ -308,9 +322,7 @@ export default function PlannerPage() {
   if (step === 'result' && plan) {
     return (
       <div className="space-y-6">
-        <style>{`@media print { body * { visibility: hidden; } #weekly-plan, #weekly-plan * { visibility: visible; } #weekly-plan { position: absolute; top: 0; left: 0; width: 100%; padding: 8px; } @page { margin: 1cm; size: landscape; } .no-print { display: none !important; } }`}</style>
-
-        <div className="flex items-center justify-between no-print">
+<div className="flex items-center justify-between no-print">
           <div>
             <h2 className="font-display text-2xl font-semibold text-ink">Planificacion generada</h2>
             <p className="text-navy-mid text-sm mt-1">{gradeData?.label} · {getSubjectLabel(subject)} · {unitData?.name} · {t('planner.week')} {week}</p>
