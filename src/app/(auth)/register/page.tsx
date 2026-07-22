@@ -1,11 +1,13 @@
 'use client'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
 export default function RegisterPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const intent = searchParams.get('intent') // 'premium' if coming from landing CTA
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -26,6 +28,16 @@ export default function RegisterPage() {
     if (error) {
       setError(error.message)
       setLoading(false)
+    } else if (intent === 'premium') {
+      // Go straight to Stripe annual checkout
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: 'annual' }),
+      })
+      const { url } = await res.json()
+      if (url) window.location.href = url
+      else router.push('/onboarding')
     } else {
       router.push('/onboarding')
       router.refresh()
@@ -38,7 +50,11 @@ export default function RegisterPage() {
         <div className="text-center">
           <p className="text-xs font-semibold text-navy-mid uppercase tracking-widest mb-3">DEPR · Puerto Rico</p>
           <h1 className="font-display text-3xl font-semibold text-ink">Crear cuenta</h1>
-          <p className="text-navy-mid mt-2">Gratis — sin tarjeta de crédito</p>
+          {intent === 'premium' ? (
+            <p className="text-navy-mid mt-2">Crea tu cuenta y activa tu prueba de 7 días gratis.</p>
+          ) : (
+            <p className="text-navy-mid mt-2">Gratis — sin tarjeta de crédito</p>
+          )}
         </div>
         <div className="bg-white border border-navy-tint rounded-2xl p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -69,7 +85,7 @@ export default function RegisterPage() {
             {error && <p className="text-clay text-sm">{error}</p>}
             <button type="submit" disabled={loading}
               className="w-full py-3 bg-navy hover:bg-navy-mid disabled:opacity-50 rounded-xl font-semibold text-white transition-colors">
-              {loading ? 'Creando cuenta...' : 'Crear cuenta gratis'}
+              {loading ? 'Creando cuenta...' : intent === 'premium' ? 'Crear cuenta y activar Premium' : 'Crear cuenta gratis'}
             </button>
           </form>
         </div>

@@ -259,7 +259,7 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-              <Link href="/register" className="block w-full py-3 text-center bg-gold hover:bg-gold-deep text-ink font-semibold rounded-xl transition-colors text-sm">
+              <Link href="/register?intent=premium" className="block w-full py-3 text-center bg-gold hover:bg-gold-deep text-ink font-semibold rounded-xl transition-colors text-sm">
                 Prueba Premium gratis →
               </Link>
             </div>
