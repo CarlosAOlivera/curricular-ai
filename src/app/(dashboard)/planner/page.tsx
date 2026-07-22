@@ -156,7 +156,9 @@ export default function PlannerPage() {
 
   const downloadPDF = useCallback(async () => {
     if (!plan) return
-    const { default: jsPDF } = await import('jspdf')
+    try {
+    const jsPDFModule = await import('jspdf')
+    const jsPDF = jsPDFModule.jsPDF ?? jsPDFModule.default
     const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'letter' })
 
     const days: Array<keyof typeof plan.days> = ['monday','tuesday','wednesday','thursday','friday']
@@ -303,6 +305,11 @@ export default function PlannerPage() {
 
     const filename = `plan-${plan.weekCode}-${plan.grade}.pdf`.replace(/\s/g, '-').toLowerCase()
     doc.save(filename)
+    } catch (err) {
+      console.error('jsPDF error:', err)
+      // Fallback: browser print dialog
+      window.print()
+    }
   }, [plan])
 
   const downloadDocx = useCallback(async () => {
@@ -503,7 +510,7 @@ export default function PlannerPage() {
           </div>
         </div>
 
-        <div ref={printRef} className="bg-white rounded-xl overflow-hidden">
+        <div ref={printRef} id="weekly-plan" className="bg-white rounded-xl overflow-hidden">
           <WeeklyPlanTable plan={plan} />
         </div>
    
