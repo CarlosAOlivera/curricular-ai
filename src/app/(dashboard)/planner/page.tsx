@@ -104,6 +104,8 @@ export default function PlannerPage() {
   const [planId, setPlanId]     = useState<string | null>(null)
   const [error, setError]       = useState('')
   const [userRole, setUserRole] = useState<string>('free')
+  const [remaining, setRemaining] = useState<number | null>(null)
+  const [showUpgrade, setShowUpgrade] = useState(false)
   const [exportingDocx, setExportingDocx] = useState(false)
   const [exportingPptx, setExportingPptx] = useState(false)
   const printRef = useRef<HTMLDivElement>(null)
@@ -136,10 +138,14 @@ export default function PlannerPage() {
     try {
       const res  = await fetch('/api/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
       const data = await res.json()
+      if (res.status === 403 && data.limitReached) {
+        setShowUpgrade(true); setStep('select'); return
+      }
       if (!res.ok) throw new Error(data.error)
       const parsed: WeeklyPlanData = JSON.parse(data.content)
       setPlan(parsed)
       setPlanId(data.planId || null)
+      if (data.remaining !== null) setRemaining(data.remaining)
       setStep('result')
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error inesperado'); setStep('select')
@@ -612,11 +618,52 @@ export default function PlannerPage() {
 
         {error && <p className="text-clay text-sm">{error}</p>}
 
+        {/* Remaining badge for free users */}
+        {userRole === 'free' && remaining !== null && (
+          <p className="text-xs text-navy-mid text-center">
+            Te quedan <span className="font-semibold text-ink">{remaining}</span> de 15 generaciones este mes.{' '}
+            <button type="button" onClick={() => setShowUpgrade(true)} className="text-gold-deep underline font-semibold">Mejora a Premium</button>
+          </p>
+        )}
+
         <button type="submit" disabled={!gradeData || !unitData || week === ''}
           className="w-full py-4 bg-navy hover:bg-navy-mid disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-semibold text-lg text-white transition-colors">
           {t('planner.generateBtn')}
         </button>
       </form>
+
+      {/* Upgrade modal */}
+      {showUpgrade && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 px-4">
+          <div className="bg-white rounded-2xl p-8 max-w-sm w-full shadow-xl space-y-4">
+            <div className="text-center space-y-2">
+              <p className="text-2xl">✨</p>
+              <h2 className="font-display text-xl font-semibold text-ink">Alcanzaste tu límite mensual</h2>
+              <p className="text-navy-mid text-sm">El plan Free incluye 15 planificaciones por mes. Con Premium generas sin límite.</p>
+            </div>
+            <ul className="space-y-2 text-sm text-ink">
+              {['Generaciones ilimitadas','Exportar a Word y PowerPoint','Rúbricas y assessments','Historial completo'].map(f => (
+                <li key={f} className="flex items-center gap-2">
+                  <span className="text-teal font-bold">✓</span> {f}
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={async () => {
+                const res = await fetch('/api/stripe/checkout', { method: 'POST' })
+                const { url } = await res.json()
+                if (url) window.location.href = url
+              }}
+              className="w-full py-3 bg-gold hover:bg-gold-deep text-ink font-semibold rounded-xl transition-colors"
+            >
+              Mejora a Premium — $7.99/mes
+            </button>
+            <button onClick={() => setShowUpgrade(false)} className="w-full text-navy-mid text-sm hover:text-ink">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

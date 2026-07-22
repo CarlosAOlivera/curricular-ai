@@ -10,4 +10,4 @@ export function createAdminClient() {
 }
 
 // Admin emails — only these users can access /admin
-export const ADMIN_EMAILS = ['coliveracuba@gmail.com']
+export const ADMIN_EMAILS = ['carlosoliverabermudez@live.com']

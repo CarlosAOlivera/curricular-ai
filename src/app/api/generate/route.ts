@@ -28,8 +28,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Perfil no encontrado' }, { status: 404 })
   }
 
-  // No generation limit — free tier is unlimited on basic plans.
-  // Premium unlocks Word export, PPT, rubrics, assessments, and full history.
+  // Free tier: 15 generations/month. Premium: unlimited.
+  const FREE_LIMIT = 15
+  if (profile.role === 'free' && profile.generations_this_month >= FREE_LIMIT) {
+    return NextResponse.json({
+      error: 'Límite mensual alcanzado',
+      limitReached: true,
+      remaining: 0,
+    }, { status: 403 })
+  }
 
   const body: GenerateRequest = await req.json()
   const { grade, subject, unitId, unitName, week, standards, teacherNotes, teacherName, school, weekStartDate } = body
@@ -163,7 +170,9 @@ export async function POST(req: NextRequest) {
         .eq('id', user.id),
     ])
 
-    const remaining = null // no limit on free tier
+    const remaining = profile.role === 'free'
+      ? Math.max(0, 15 - (profile.generations_this_month + 1))
+      : null
 
     return NextResponse.json({ content, remaining, role: profile.role })
   } catch (error) {

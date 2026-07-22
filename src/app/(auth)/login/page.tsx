@@ -16,12 +16,13 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
     const supabase = createClient()
+    const ADMIN_EMAILS = ['carlosoliverabermudez@live.com']
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) {
       setError('Credenciales incorrectas. Verifica tu correo y contrasena.')
       setLoading(false)
     } else {
-      router.push('/dashboard')
+      router.push(ADMIN_EMAILS.includes(email.toLowerCase()) ? '/admin' : '/dashboard')
       router.refresh()
     }
   }
