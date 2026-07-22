@@ -59,11 +59,10 @@ export default function AssessmentPage() {
 
   async function handleActivateTrial() {
     setActivatingTrial(true)
-    const res = await fetch('/api/activate-trial', { method: 'POST' })
-    const data = await res.json()
-    if (res.ok) { setTrialEndsAt(data.trial_ends_at); setUserRole(data.role || userRole) }
-    else setError(data.error || 'Error activando trial')
-    setActivatingTrial(false)
+    const res = await fetch('/api/stripe/checkout', { method: 'POST' })
+    const { url } = await res.json()
+    if (url) window.location.href = url
+    else { setError('Error al iniciar el checkout'); setActivatingTrial(false) }
   }
 
   function togglePlan(id: string) {
@@ -108,7 +107,7 @@ export default function AssessmentPage() {
           {!trialEndsAt ? (
             <>
               <p className="text-ink font-semibold">Prueba Premium gratis por 7 dias</p>
-              <p className="text-navy-mid text-sm">Sin tarjeta de credito. Accede a Assessment, Rubrica y Planilla de Especificaciones.</p>
+              <p className="text-navy-mid text-sm">7 días gratis, luego $7.99/mes. Cancela cuando quieras.</p>
               <button
                 onClick={handleActivateTrial}
                 disabled={activatingTrial}
@@ -121,7 +120,14 @@ export default function AssessmentPage() {
             <>
               <p className="text-ink font-semibold">Tu periodo de prueba ha terminado</p>
               <p className="text-navy-mid text-sm">Suscribete a Premium para seguir usando esta funcion.</p>
-              <button className="w-full py-3 bg-navy hover:bg-navy-mid rounded-xl font-semibold text-white transition-colors">
+              <button
+                className="w-full py-3 bg-navy hover:bg-navy-mid rounded-xl font-semibold text-white transition-colors"
+                onClick={async () => {
+                  const res = await fetch('/api/stripe/checkout', { method: 'POST' })
+                  const { url } = await res.json()
+                  if (url) window.location.href = url
+                }}
+              >
                 Ver planes Premium
               </button>
             </>

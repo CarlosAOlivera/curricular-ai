@@ -79,11 +79,10 @@ export default function RubricaPage() {
 
   async function handleActivateTrial() {
     setActivatingTrial(true)
-    const res = await fetch('/api/activate-trial', { method: 'POST' })
-    const data = await res.json()
-    if (res.ok) setTrialEndsAt(data.trial_ends_at)
-    else setError(data.error)
-    setActivatingTrial(false)
+    const res = await fetch('/api/stripe/checkout', { method: 'POST' })
+    const { url } = await res.json()
+    if (url) window.location.href = url
+    else { setError('Error al iniciar el checkout'); setActivatingTrial(false) }
   }
 
   async function handleGenerate() {
@@ -182,7 +181,14 @@ export default function RubricaPage() {
       {!premiumActive && trialEndsAt && (
         <div className="bg-clay/10 border border-clay/30 rounded-xl p-3 flex items-center justify-between gap-3">
           <p className="text-clay text-sm">{t('rubrica.trialExpiredMsg')}</p>
-          <button className="px-4 py-2 bg-navy hover:bg-navy-mid text-white rounded-lg text-sm font-semibold transition-colors">{t('rubrica.upgradePremium')}</button>
+          <button
+            className="px-4 py-2 bg-navy hover:bg-navy-mid text-white rounded-lg text-sm font-semibold transition-colors"
+            onClick={async () => {
+              const res = await fetch('/api/stripe/checkout', { method: 'POST' })
+              const { url } = await res.json()
+              if (url) window.location.href = url
+            }}
+          >{t('rubrica.upgradePremium')}</button>
         </div>
       )}
 

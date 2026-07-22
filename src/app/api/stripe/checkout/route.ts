@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { stripe, STRIPE_PRICE_ID } from '@/lib/stripe'
+import { stripe, STRIPE_PRICE_ID, STRIPE_ANNUAL_PRICE_ID } from '@/lib/stripe'
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('stripe_customer_id, role')
+    .select('stripe_customer_id, stripe_subscription_id, role')
     .eq('id', user.id)
     .single()
 
@@ -28,14 +28,19 @@ export async function POST(req: NextRequest) {
     await supabase.from('profiles').update({ stripe_customer_id: customerId }).eq('id', user.id)
   }
 
+  const body = await req.json().catch(() => ({}))
+  const plan = body?.plan === 'annual' ? 'annual' : 'monthly'
+  const priceId = plan === 'annual' ? STRIPE_ANNUAL_PRICE_ID : STRIPE_PRICE_ID
+  const isFirstTime = !profile?.stripe_subscription_id
+
   const origin = req.headers.get('origin') || 'https://lumialabs.app'
 
   const session = await stripe.checkout.sessions.create({
     customer: customerId,
     mode: 'subscription',
     payment_method_types: ['card'],
-    line_items: [{ price: STRIPE_PRICE_ID, quantity: 1 }],
-    subscription_data: { trial_period_days: 7 },
+    line_items: [{ price: priceId, quantity: 1 }],
+    subscription_data: isFirstTime ? { trial_period_days: 7 } : undefined,
     success_url: `${origin}/dashboard?upgraded=1`,
     cancel_url: `${origin}/dashboard`,
     metadata: { supabase_user_id: user.id },

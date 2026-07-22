@@ -650,13 +650,23 @@ export default function PlannerPage() {
             </ul>
             <button
               onClick={async () => {
-                const res = await fetch('/api/stripe/checkout', { method: 'POST' })
+                const res = await fetch('/api/stripe/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan: 'monthly' }) })
+                const { url } = await res.json()
+                if (url) window.location.href = url
+              }}
+              className="w-full py-3 bg-navy hover:bg-navy-mid text-white font-semibold rounded-xl transition-colors"
+            >
+              Mensual — $7.99/mes
+            </button>
+            <button
+              onClick={async () => {
+                const res = await fetch('/api/stripe/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan: 'annual' }) })
                 const { url } = await res.json()
                 if (url) window.location.href = url
               }}
               className="w-full py-3 bg-gold hover:bg-gold-deep text-ink font-semibold rounded-xl transition-colors"
             >
-              Mejora a Premium — $7.99/mes
+              Anual — $59.99/año <span className="text-xs font-normal">(ahorras $36)</span>
             </button>
             <button onClick={() => setShowUpgrade(false)} className="w-full text-navy-mid text-sm hover:text-ink">
               Cancelar
